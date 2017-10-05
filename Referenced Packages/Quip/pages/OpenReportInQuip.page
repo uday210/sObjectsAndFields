@@ -1,0 +1,80 @@
+<apex:page controller="Quip.Quip_ReportExport_Controller" readOnly="true">
+    <apex:form >
+        <apex:pageBlock title="Open Report in Quip">
+            <apex:pageBlockSection columns="1">
+                Display live CRM data in a Quip spreadsheet, where you can can share and chat with your team. Data stays updated in Quip as it changes in Salesforce.
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1" rendered="{!reports.size > 0}">
+				Below are your recently viewed reports. If you don't see the report you are looking for, try opening it in the Reports tab.
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1" rendered="{!reports.size == 0}">
+                <apex:pageMessage summary="It looks like you have not opened any reports recently. Go ahead and open a report in the Reports tab and refresh this page." severity="warning" strength="3"/>
+                <apex:pageMessages />
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockButtons location="bottom" rendered="{!reports.size > 0}">
+                <apex:outputPanel id="controls">
+                    <apex:commandButton action="{!Beginning}" title="Beginning" value="Beginning" disabled="{!!enablePrevious}" reRender="output,controls"/>
+                    <apex:commandButton action="{!Previous}" title="Previous" value="Previous" disabled="{!!enablePrevious}" reRender="output,controls"/>
+                    <apex:commandButton action="{!Next}" title="Next" value="Next" disabled="{!!enableNext}" reRender="output,controls"/>
+                    <apex:commandButton action="{!End}" title="End" value="End" disabled="{!!enableNext}" reRender="output,controls"/>
+                    <span style="float:right;padding:4px 3px;margin:1px;">
+                        Page {!pageNumber} of {!totalPages}
+                    </span>
+                </apex:outputPanel>
+            </apex:pageBlockButtons>
+            
+            <apex:pageBlockSection columns="1" rendered="{!reports.size > 0}">
+                <apex:outputPanel id="output">
+                    <apex:pageBlockTable value="{!reports}" var="report" align="center" columns="6" columnsWidth="20%,30%,20%,10%,10%,10%">
+                        <apex:column >
+                            <apex:outputLink value="/{!report.Id}">{!report.Name}</apex:outputLink>
+                            <apex:facet name="header">
+                                <apex:commandLink value="Name {!IF(sortExpression=='Name',IF(sortOrder='ASC','▲','▼'),'')}">
+                                    <apex:param name="sortExpression" value="Name" assignTo="{!sortExpression}"/>
+                                </apex:commandLink>
+                            </apex:facet>
+                        </apex:column>
+                        <apex:column value="{!report.Description}">
+                            <apex:facet name="header">
+                                <apex:commandLink value="Description {!IF(sortExpression=='Description',IF(sortOrder='ASC','▲','▼'),'')}">
+                                    <apex:param name="sortExpression" value="Description" assignTo="{!sortExpression}"/>
+                                </apex:commandLink>
+                            </apex:facet>
+                        </apex:column>
+                        <apex:column value="{!report.FolderName}">
+                            <apex:facet name="header">
+                                <apex:commandLink value="FolderName {!IF(sortExpression=='FolderName',IF(sortOrder='ASC','▲','▼'),'')}">
+                                    <apex:param name="sortExpression" value="FolderName" assignTo="{!sortExpression}"/>
+                                </apex:commandLink>
+                            </apex:facet>
+                        </apex:column>
+                        <apex:column value="{!report.LastModifiedDate}">
+                            <apex:facet name="header">
+                                <apex:commandLink value="Last Modified Date {!IF(sortExpression=='LastModifiedDate',IF(sortOrder='ASC','▲','▼'),'')}">
+                                    <apex:param name="sortExpression" value="LastModifiedDate" assignTo="{!sortExpression}"/>
+                                </apex:commandLink>
+                            </apex:facet>
+                        </apex:column>
+                        <apex:column value="{!report.LastViewedDate}">
+                            <apex:facet name="header">
+                                <apex:commandLink value="Last Viewed Date {!IF(sortExpression=='LastViewedDate',IF(sortOrder='ASC','▲','▼'),'')}">
+                                    <apex:param name="sortExpression" value="LastViewedDate" assignTo="{!sortExpression}"/>
+                                </apex:commandLink>
+                            </apex:facet>
+                        </apex:column>
+                        <apex:column headerValue="Action">
+                            <apex:commandLink value="Open in Quip" 
+                                  action="{!exportReport}"
+                                  styleClass="btn"
+                                  style="text-decoration:none;">
+                                <apex:param name="selectedReportId" assignTo="{!selectedReportId}" value="{!report.Id}"/>
+                            </apex:commandLink>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

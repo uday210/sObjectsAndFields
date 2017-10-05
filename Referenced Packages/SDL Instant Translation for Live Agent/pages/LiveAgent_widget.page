@@ -1,0 +1,888 @@
+<apex:page standardController="SDL_LC__Live_Agent_Settings__c" extensions="SDL_LC.LiveAgentChatWidget_Controller" docType="html-5.0" sidebar="false">
+
+ <html lang="en" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
+            <head>
+                <title>SDL Project Form</title>
+                <meta charset="utf-8"/>
+                <meta content="ie=edge" http-equiv="x-ua-compatible"/>
+                <meta content="width=device-width, initial-scale=1" name="viewport"/>
+                <meta content="Design System" name="apple-mobile-web-app-title"/>
+                <meta content="Design System" name="application-name"/>
+                <meta content="#ffffff" name="msapplication-TileColor"/>
+                <meta content="#ffffff" name="theme-color"/>
+                
+                <apex:stylesheet value="{!URLFOR($Resource.SDL_LC__LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/styles/salesforce-lightning-design-system-vf.css')}" />
+                 <apex:includeScript value="{!URLFOR($Resource.SDL_LC__liveAgent_static_Resources, '/liveagentStaticResources/jquery-1.12.0.js')}" />
+                 <apex:includeScript value="{!URLFOR($Resource.SDL_LC__liveAgent_static_Resources, '/liveagentStaticResources/securefiltersmaster/lib/secure-filters.js')}" />
+                <apex:stylesheet value="{!URLFOR($Resource.SDL_LC__LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/styles/SalesforceLightningDesignSystem.css')}" />
+                 <apex:stylesheet value="{!URLFOR($Resource.SDL_LC__LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/styles/SalesforceLightningDesignSystem.min.css')}" />
+                 <apex:includeScript value="/support/console/38.0/integration.js"/>
+            </head>
+            <style>
+                .errorCls{
+                    z-index : 1000;
+                    position : fixed;
+                    //background:white;
+                 }
+                 #loadinggif {
+                        background:url(../img/ajax-loader.gif) no-repeat 0 0;
+                            position:absolute;
+                            top:50%;
+                            left:50%;
+                            width:16px;
+                            height:16px;    
+                            margin-left:-8px;
+                            display:none; 
+                }
+              
+                .tooltip {
+                    position: relative;
+                    display: inline-block;
+                    
+                }
+                
+                .tooltip .tooltiptext {
+                    visibility: hidden;
+                    width: 120px;
+                    background-color: #555;
+                    color: #fff;
+                    text-align: center;
+                    border-radius: 6px;
+                    padding: 5px 0;
+                    position: absolute;
+                    z-index: 1;
+                    bottom: 125%;
+                    left: 50%;
+                    margin-left: -60px;
+                    opacity: 0;
+                    transition: opacity 1s;
+                }
+                
+                .tooltip .tooltiptext::after {
+                    content: "";
+                    position: absolute;
+                    top: 100%;
+                    left: 90%;
+                    margin-left: -5px;
+                    border-width: 5px;
+                    border-style: solid;
+                    border-color: #555 transparent transparent transparent;
+                }
+                
+                .tooltip:hover .tooltiptext {
+                    visibility: visible;
+                    opacity: 1;
+                }
+            </style>
+            <body>
+                
+                                                     <!--Header -->
+                                                     <div class="slds slds-page-header slds-text-header--small" role="banner" style="height:36px;border:none">
+                                                       <div style="float:left;margin-left:-7%">
+                                                           <img src="{!URLFOR($Resource.liveAgent_static_Resources, '/liveagentStaticResources/SDL_Logo.png')}" style="height:35px;margin-top:-14px"></img>
+                                                        </div>
+                                                        <!--<input type="button" value="Refresh" onClick="history.go()" />-->
+                                                        <button class="slds slds-button slds-button--icon-border" onclick="refresh();return false;" aria-live="assertive" style="margin-left:43%;margin-top:-4%;width:20px;height:20px">
+                                                          <svg class="slds slds-button__icon" aria-hidden="true" style="margin-left:-6.5px;margin-top:-19px;margin-right:-6px;height:16px;color: #626b80;">
+                                                            <use xlink:href="{!URLFOR($Resource.LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/icons/utility-sprite/svg/symbols.svg#refresh')}"></use>
+                                                          </svg>
+                                                          <span class="slds slds-assistive-text">Like</span>
+                                                        </button>
+                                                    </div>
+                                                          <table style="margin-top:2%;width:42%">
+                                                                <tr>
+                                                                     <td  >
+                                                                         <div aria-expanded="true"  class="slds slds-picklist" >
+                                                                                 <div aria-expanded="true" class="slds-picklist" >
+                                                                                   <label class="slds slds-form-element__label" style="font-size:13px;">From </label>
+                                                                                   <button class="slds slds-button slds-button--neutral slds-picklist__label" id="button1" aria-haspopup="true" onclick="showOrHideOption(); return false;" style="max-width:34%;position:fixed;height:26px;margin-left:-8px">
+                                                                                      <span class="slds slds-truncate" id="spanId_Selected" style="font-size:93%;" >Select</span>
+                                                                                      <svg aria-hidden="true" class="slds-icon">
+                                                                                          <use xlink:href ="{!URLFOR($Resource.LightningDesignSystem,'/SalesforceLightningDesignSystem/assets/icons/utility-sprite/svg/symbols.svg#down')}" id="svglanguagesDownId"></use>
+                                                                                      </svg>
+                                                                                    </button>
+                                                                                    <div class="slds-dropdown slds-dropdown--left slds-dropdown--small slds-dropdown--menu" id="downloadOptionsContainerId" style="min-width:142px;width:163px;margin-left:19%;margin-top: 5%;">
+                                                                                      <ul class="slds-dropdown__list" role="menu" id="listitemsfrom" style="font-size:90%;margin-left:-1%">
+                                                                                        <!--<li id="menu-0-0" class="slds-dropdown__item slds-has-icon--left"><a href="#" class="slds-truncate" role="menuitemradio" onclick="setPicklistVal(this.innerHTML);">English</a></li>
+                                                                                        <li id="menu-1-1" class="slds-dropdown__item slds-has-icon--left"><a href="#" class="slds-truncate" role="menuitemradio" onclick="setPicklistVal(this.innerHTML);">Spanish</a></li>--> 
+                                                                                      </ul>
+                                                                                    </div>
+                                                                              </div>
+                                                                         </div>
+                                                                        <!--  </div>  -->
+                                                                     </td>
+                                                                     <td >
+                                                                         <div class="slds slds-form-element" >
+                                                                             <div aria-expanded="true" class="slds-picklist" >
+                                                                                   <label class="slds slds-form-element__label" style="margin-left:190%;font-size:13px;float:left" >To </label>
+                                                                                   <button class="slds slds-button slds-button--small slds-button--neutral slds-picklist__label" id="button2" aria-haspopup="true" onclick="showOrHideOption1(); return false;" style="max-width:35%;margin-left:-7px;margin-top:1px;height:26px;min-height:10px;position:fixed;">
+                                                                                      <span class="slds slds-truncate" id="spanId_Selected1" style="font-size:93%;" >Select</span>
+                                                                                      <svg aria-hidden="true" class="slds-icon">
+                                                                                          <use xlink:href ="{!URLFOR($Resource.LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/icons/utility-sprite/svg/symbols.svg#down')}" id="svglanguagesDownId1"></use>
+                                                                                      </svg>
+                                                                                    </button>
+                                                                                    <div class="slds-dropdown slds-dropdown--left slds-dropdown--small slds-dropdown--menu" id="downloadOptionsContainerId1" style="min-width:74px;width:160px;margin-left:199%;margin-top:49%;">
+                                                                                      <ul class="slds-dropdown__list slds-dropdown--length-5" role="menu" id="listitemsto" style="font-size:90%;margin-left:-1%">
+                                                                                        <!--<li id="menu-0-0" class="slds-dropdown__item slds-has-icon--left"><a href="#" class="slds-truncate" role="menuitemradio" onclick="setPicklistVal(this.innerHTML);">English</a></li>
+                                                                                        <li id="menu-1-1" class="slds-dropdown__item slds-has-icon--left"><a href="#" class="slds-truncate" role="menuitemradio" onclick="setPicklistVal(this.innerHTML);">Spanish</a></li>--> 
+                                                                                      </ul>
+                                                                                    </div>
+                                                                             </div>
+                                                                          </div>
+                                                                         <!--</div> --> 
+                                                                     </td>
+                                                                 </tr>
+                                                          </table>
+                                                          <div style="display:none">
+                                                              <select id="emptypicklist"></select> 
+                                                          </div>  
+                                                  
+                                                     <!--Input Text area starts-->
+                                                     <div class="slds-form-element" style="margin-top:2%;">
+                                                       <!--<table>
+                                                           <tr>
+                                                               <td><label class="slds slds-form-element__label" style="font-size:13px"> Input Text</label></td>
+                                                               <td><button class="slds slds-button slds-button--icon-border"  onclick="copy();return false;" style="margin-left:57%;margin-top:-4%;width:26px;height:26px" >C</button></td>
+                                                           </tr>
+                                                       </table>-->
+                                                          <label class="slds slds-form-element__label" style="font-size:13px"> Input Text</label>
+                                                          <button class="slds slds-button slds-button--icon-border" onclick="copy();return false;" aria-live="assertive" style="margin-left:69%;margin-top:1%;width:20px;height:20px">
+                                                              <svg class="slds slds-button__icon" aria-hidden="true" style="margin-left:-5.5px;margin-top:0px;margin-right:-6px;height:16px;color: #626b80;">
+                                                                <use xlink:href="{!URLFOR($Resource.LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/icons/utility-sprite/svg/symbols.svg#copy')}"></use>
+                                                              </svg>
+                                                              <span class="slds slds-assistive-text">Like</span>
+                                                          </button>
+                                                          <div class="slds slds-form-element__control" style="margin-top:1%;">
+                                                             <textarea class="slds slds-textarea" id="inputtext" rows="2" placeholder="Enter Text here"  onkeyup="testIt(this.value);"  onkeydown="oninputtextchange();" ></textarea>
+                                                          </div>
+                                                     </div>  
+                                                                                                      
+                                                     <!--Input Text area ends here-->
+                                                     <!--Button-->
+                                                     <div class="slds slds-button-group" role="group" style="margin-left:36.5%;margin-top:1%">
+                                                                <input class="slds slds-button slds-button--brand " onclick="Translate();" id="tran"  value="Translate" type="button" style="line-height:27px;" />
+                                                                <!--<input class="slds slds-button slds-button--brand  " onclick="ReverseTranslate();"  value="ReverseTranslate" type="button" style="line-height:20px;" />-->
+                                                               
+                                                    </div>
+                                                    <div class="slds-spinner_container" id="smallspin" style="display:none;margin-left:64%;margin-top:40%;height:3rem;width:3rem;">
+                                                      <div role="status" class="slds-spinner slds-spinner--small slds-spinner--brand">
+                                                        <span class="slds-assistive-text">Loading</span>
+                                                        <div class="slds-spinner__dot-a"></div>
+                                                        <div class="slds-spinner__dot-b"></div>
+                                                      </div>
+                                                   </div>
+                                                    <!--Output Text area starts-->
+                                                     <div class="slds-form-element" >
+                                                          <label class="slds slds-form-element__label" style="font-size:13px"> Translation</label> 
+                                                          <div class="slds slds-form-element__control"> 
+                                                              <textarea  class="slds slds-textarea" id="outputtext" rows="2" cols="20" readonly="readonly"></textarea>
+                                                          </div>
+                                                     </div> <br />
+                                                    <!--Output Text area ends here-->
+                                                    <!--Reverse Button-->
+                                                    <!--<button class="slds slds-button slds-button--neutral slds-not-selected" id="rev" onclick="ReverseTranslate();"  aria-live="assertive" style="width:30px;padding-left:0px;padding-right:4px;padding-bottom:27px;height:0px;margin-left:43%;margin-top:-3%">
+                                                                  <apex:image url="{!URLFOR($Resource.liveAgent_static_Resources, '/liveagentStaticResources/bakcward.png')}" style="width:80%;margin-top:-32%;margin-bottom:-3px"  />
+                                                    </button>
+                                                    <div id="help"><p id="helptext">“Use the back translation to confirm that your English text has been translated correctly by the machine translation. If it doesn’t look correct, try adjusting your English</p></div>-->
+                                                     <!--Revers Translation Text AREA  -->
+                                                     <div class="slds-form-element" style="margin-top:2%" >
+                                                       <table>
+                                                         <tr>
+                                                            <td><label class="slds slds-form-element__label" style="font-size:13px">Reverse Translation</label> </td>
+                                                            <td><div id="reverselangpair" style="font-size:12px;display:none;margin-left:-8%;margin-top:-1%;color:#54698d"><p id="langpairreverse">eng-->ben</p></div></td>
+                                                             <td><div class="tooltip"><button class="slds slds-button slds-button--icon-border"  aria-live="assertive" style="margin-left:-9%;margin-top:-4%;position:fixed;width:20px;height:20px">
+                                                                  <svg class="slds slds-button__icon" aria-hidden="true" style="margin-left:-6.5px;margin-top:-6px;margin-right:-6px;height:14px;color: #626b80;">
+                                                                    <use xlink:href="{!URLFOR($Resource.LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/icons/utility-sprite/svg/symbols.svg#help')}"></use>
+                                                                  </svg>
+                                                                  <span class="tooltiptext" style="font-family:Arial;font-size:11px;margin-left:-276px;margin-bottom:6px;width:300px;height:50px;">Use the back translation to confirm that your Input text has been translated correctly by the machine translation. If it doesn’t look correct, try adjusting your Input.</span>
+                                                              </button>
+                                                              </div>
+                                                            </td>
+                                                         </tr>
+                                                       </table>
+                                                          
+                                                          <div class="slds slds-form-element__control"> 
+                                                               <textarea  class="slds slds-textarea" id="reverseoutputtext" rows="2" cols="20" readonly="readonly"></textarea>
+                                                          </div>
+                                                     </div> <br />  
+                                                     <!--Alert area starts-->
+                                                       <div class="slds slds-box" id="alert" style="display:none;border:none;color:red;margin-top:-11%"><center><p id="AlertContent">Language Pairs Are Not Available, Please Configure The Setting Page .</p></center></div>
+                                                     <!--Alert ended here-->
+            </body>
+    </html>
+ <script type="text/javascript">
+
+var langMap = {};
+var sourcelang;
+        var orgSettings;
+        var langPairs = [];
+        var chatEmail = {};
+        var isTranslation = false;
+        var html_encode = secureFilters.html;
+        
+        $(document).click(function(){
+          $("#downloadOptionsContainerId").hide();
+          $("#downloadOptionsContainerId1").hide();
+        });
+        
+        $("#downloadOptionsContainerId").click(function(e){
+          e.stopPropagation();
+        });
+        $("#downloadOptionsContainerId1").click(function(e){
+          e.stopPropagation();
+        });
+        
+        
+        
+        function getOrgSettings(){
+            Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.LiveAgentChatWidget_Controller.getLiveAgentSettings}',
+                        function(result, event){
+                            if(result != null && result != undefined){
+                                orgSettings = result.liveAgentSettings;
+                                sourcelang = result.AgentLanguage;
+                                langPairs =  result.languagePairs;
+                                if(orgSettings != null)
+                                isTranslation = orgSettings.SDL_LC__isActive__c;
+                            }
+                     });
+        }
+        
+        function SendAgentsMessage(text,TargetLanguage,currentChatKey){
+            var agentsrclang = sourcelang;
+            var lpairString = agentsrclang + ',' + TargetLanguage;
+            if(langPairs != undefined && langPairs != null){
+                    if(langPairs.includes(lpairString)){
+                        if(agentsrclang != TargetLanguage){
+                                Visualforce.remoting.Manager.invokeAction(
+                                '{!$RemoteAction.LiveAgentChatWidget_Controller.TextTranslation}',encodeURIComponent(text),agentsrclang,TargetLanguage,
+                                function(result, event){
+                                    if (event.status) {
+                                        if(result.isError == null || result.isError == undefined) {
+                                          var messageToSend = text;
+                                          if(result.translation != undefined){
+                                              messageToSend = text + ' : ' + result.translation;
+                                          }
+                                          try {
+                                              sforce.console.chat.sendMessage(currentChatKey,messageToSend);
+                                          }
+                                          catch(err) {
+                                              alert(err.message);
+                                          }
+                                       }
+                                       else{
+                                              sforce.console.chat.sendMessage(currentChatKey,text);
+                                       } 
+                                    }
+                                }, 
+                                {escape: false}
+                            );
+                        }
+                        else{
+                            sforce.console.chat.sendMessage(currentChatKey,text);
+                        }
+                         
+                }
+                else{
+                    if(chatEmail[currentChatKey] != false)
+                    {
+                        if(agentsrclang!=TargetLanguage){ //new
+                            sendEmailToAgent(agentsrclang,TargetLanguage,currentChatKey);
+                        }
+                        
+                        //sendEmailToAgent(agentsrclang,TargetLanguage,currentChatKey);
+                    }
+                    try {
+                        sforce.console.chat.sendMessage(currentChatKey,text);
+                        
+                    }
+                    catch(err) {
+                    }
+                   
+                }
+            }
+            else{
+                try {
+                        sforce.console.chat.sendMessage(currentChatKey,text);
+                    }
+                    catch(err) {
+                    }
+            }
+        }
+        function sendEmailToAgent(agentsrclang,TargetLanguage,currentChatKey){
+            Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.LiveAgentChatWidget_Controller.SendEmailToAgent}',agentsrclang,TargetLanguage,
+                        function(result, event){
+                            if (event.status) {
+                                if(result == 'SUCCESS'){
+                                  chatEmail[currentChatKey] = false;
+                                } 
+                            }
+                        }, 
+                        {escape: true}
+                    );
+
+        }
+   
+ var agentStarteChat = function (result)
+     {    
+          
+            function sendCustomEventSuccess(result) {
+                if (result.success == true) {
+                } else {
+                }
+            }
+            var visitorChatKey = result.chatKey;
+            sforce.console.chat.sendCustomEvent(visitorChatKey, 'AgentCustomEvent', sourcelang, sendCustomEventSuccess);
+            chatEmail[visitorChatKey] =  true;
+             var customEventHandler = function (result) {
+                     if (result.success){
+                        langMap[visitorChatKey] = result.data;
+                     } else {
+                     }
+                 }
+            var msgByAgent = function (result) 
+             {
+                    var agentTypedMessage = result.content;
+                    agentTypedMessage = agentTypedMessage.replace(/\n/g, ' ');
+                    if(isTranslation != undefined && isTranslation == true){
+                        if(result.isAutoGreeting == true){
+                            try {
+                                sforce.console.chat.sendMessage(visitorChatKey,agentTypedMessage);
+                            }
+                            catch(err) {
+                            }
+                          
+                        }
+                        else{
+                            var showTabId = function showTabId(result) {
+                                function getDetailsSuccess(result) {
+                                   var currentChatKey = result.details.chatKey;
+                                   if(langMap[currentChatKey] == null){
+                                       var chatLogMessage;
+                                           for(i=0;i<result.details.messages.length;i++){
+                                               if(result.details.messages[i].type == 'Chasitor'){
+                                                   chatLogMessage = result.details.messages[i].content;
+                                                   break;
+                                               }
+                                           }
+                                           if(chatLogMessage != undefined && chatLogMessage != null && chatLogMessage != ''){
+                                                var textToDetect2 = chatLogMessage.substring(0,100);
+                                                targetLanguage = langMap[currentChatKey];
+                                                if(targetLanguage!=null && targetLanguage!=undefined){
+                                                    SendAgentsMessage(agentTypedMessage,targetLanguage,currentChatKey);
+                                                }
+                                                else{
+                                                    sforce.console.chat.sendMessage(visitorChatKey,agentTypedMessage);
+                                                }
+                                                                                        }
+                                            else{
+                                                try {
+                                                    sforce.console.chat.sendMessage(currentChatKey, agentTypedMessage);
+                                                }
+                                                catch(err) {
+                                                    alert(err.message);
+                                                }
+                                            }
+                                   }else{
+                                       SendAgentsMessage(agentTypedMessage,langMap[currentChatKey],currentChatKey);
+                                   }
+                                }
+                                try {
+                                    sforce.console.chat.getDetailsByPrimaryTabId(result.id, getDetailsSuccess);
+                                }
+                                catch(err) {
+                                    alert(err.message);
+                                }
+                                
+                             }
+                            try {
+                                sforce.console.getFocusedPrimaryTabId(showTabId);
+                            }
+                            catch(err) {
+                                alert(err.message);
+                            }
+                        }
+                    }
+                    else{
+                        try {
+                            sforce.console.chat.sendMessage(visitorChatKey, agentTypedMessage);
+                        }
+                        catch(err) {
+                        }
+                    }
+              }
+            try {
+                sforce.console.chat.onAgentSend(result.chatKey, msgByAgent);
+            }
+            catch(err) {
+            }
+          sforce.console.chat.onCustomEvent(visitorChatKey,'visitorCustomEvent',customEventHandler);
+          sforce.console.chat.onCustomEvent(visitorChatKey, 'visitorSourceLanguage', customEventHandler);
+
+     }
+     getOrgSettings();
+                
+         sforce.console.chat.onChatStarted(agentStarteChat);
+             
+        var fromlanguage;
+        var tolanguage;
+        var Fromlanguage;
+        var FromLanguagecode;
+        var autodetectflag=false;
+        var ToLanguageName;
+        var FromLanguageName;
+        
+        
+        $( document ).ready(function() {      
+            //$('#LiveSpinner').show();
+            getLanguagePairs();
+            //getToLanguage();
+            $('#listitemsto').change(function(){
+                $("#width_tmp_option").html(html_encode($('#listitemsto option:selected').text())); 
+                $(this).width($("#width_tmp_select").width());  
+              });
+        });
+        
+        function refresh(){
+            $("#inputtext").val('');
+            $("#outputtext").val('');
+            $("#reverseoutputtext").val('');
+            document.getElementById('spanId_Selected').innerHTML = html_encode('Select');
+            document.getElementById('spanId_Selected1').innerHTML = html_encode('Select');
+            var e = document.getElementById('alert');
+            e.style.display = 'none';
+            $('#rev').removeAttr('disabled');
+            $('#tran').removeAttr('disabled');
+            var spinshow= document.getElementById("smallspin");
+            spinshow.style.display = 'none';
+            var ef = document.getElementById('reverselangpair');
+            ef.style.display = 'none';
+        }
+        
+        function copy(){
+            $("#inputtext").select();
+            document.execCommand('copy');
+        }
+        
+       function oninputtextchange(){
+            $("#outputtext").val('');
+            $("#reverseoutputtext").val('');
+            var autoinputtext=$("#inputtext").val().trim(); 
+            if(autodetectflag==true && (autoinputtext.length==1 || autoinputtext.length==0)){
+                document.getElementById('spanId_Selected').innerHTML = html_encode('Select');
+                document.getElementById('spanId_Selected1').innerHTML = html_encode('Select');
+                var e = document.getElementById('alert');
+                e.style.display = 'none';
+            }
+            var e = document.getElementById('alert');
+            e.style.display = 'none';
+            $('#rev').removeAttr('disabled');
+            $('#tran').removeAttr('disabled');
+            var spinshow= document.getElementById("smallspin");
+            spinshow.style.display = 'none';
+            var ef = document.getElementById('reverselangpair');
+            ef.style.display = 'none';
+       }
+       
+       function testIt(num) {
+
+         if (num.length === 5) {
+            if(document.getElementById('spanId_Selected').innerHTML=='Select' && document.getElementById('spanId_Selected1').innerHTML=='Select' ){
+                DetectLanguage();
+            }
+           
+         }
+        }
+     //From Language picklist options   
+        function showOrHideOption(){
+               // autodetectflag=false;
+               
+                if(showOrHideOptionVal == 'show'){
+                   
+                   $("#downloadOptionsContainerId").show();
+                  // $("#downloadOptionsContainerId1").hide();//new
+                   showOrHideOptionVal = 'hide';
+                }else if(showOrHideOptionVal == 'hide'){
+                   
+                   $("#downloadOptionsContainerId").hide();
+                   showOrHideOptionVal = 'show';
+                }
+                
+            }
+            
+             showOrHideOptionVal = 'show';   
+             $('#downloadOptionsContainerId').hide();
+         
+             $( "#spanId_Selected,#svgDownId").click(function() {
+                    showOrHideOption();
+                    return false;
+             });
+         
+         function setPicklistVal(selectedTextval,selectedid){
+                      var ef = document.getElementById('reverselangpair');
+                      ef.style.display = 'none';
+                      document.getElementById('spanId_Selected').innerHTML = html_encode(selectedTextval);
+                       fromlanguage=selectedid;
+                       FromLanguageName=selectedTextval;
+                       document.getElementById('spanId_Selected1').innerHTML = html_encode('Select');
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.LiveAgentChatWidget_Controller.ToLanguage}',
+                                fromlanguage,
+                                function(result, event){
+                                  if(result!=null){
+                                       
+                                       var $pickto = $('#listitemsto');
+                                       $('#listitemsto').html('');
+                                       $.each( result, function( key, value ) {
+                                              $pickto.append($('<li id="' + html_encode(key) + '"  class="slds-dropdown__item slds-has-icon--left"><a href="#" class="slds-truncate" id="' + html_encode(key) + '" role="menuitemradio" onclick="setPicklistValto(this.innerHTML,this.id);">'+ html_encode(value)+ '</a></li>'));
+                                              
+                                           });
+                                           
+                                     }
+                                }
+                          );
+                       autodetectflag=false;
+                       showOrHideOption();
+              
+               
+             }
+             
+                      
+       //To Language Picklist
+        function showOrHideOption1(){
+                if(showOrHideOptionVal1 == 'show'){
+                   $("#downloadOptionsContainerId1").show();
+                   //$("#downloadOptionsContainerId").hide();//new
+                   showOrHideOptionVal1 = 'hide';
+                }else if(showOrHideOptionVal1 == 'hide'){
+                   $("#downloadOptionsContainerId1").hide();
+                   showOrHideOptionVal1 = 'show';
+                }
+               
+            }
+            showOrHideOptionVal1 = 'show';   
+         $('#downloadOptionsContainerId1').hide();
+         
+         $( "#spanId_Selected1,#svgDownId").click(function() {
+                showOrHideOption1();
+                return false;
+         });
+         
+          function setPicklistValto(selectedTextval,selectedid){
+                       var ef = document.getElementById('reverselangpair');
+                       ef.style.display = 'none';
+                       document.getElementById('spanId_Selected1').innerHTML = html_encode(selectedTextval);
+                       ToLanguageName=selectedTextval;
+                       tolanguage=selectedid;
+                       showOrHideOption1();
+              
+             }
+        
+        function getLanguagePairs(){
+            Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.LiveAgentChatWidget_Controller.SDLLanguagePairs}',
+                        function(result, event){
+                          if(result!=null){
+                                var $pickfrom = $('#listitemsfrom');
+                               
+
+                           $.each( result, function( key, value ) {
+                                        $pickfrom.append($('<li id="' + html_encode(key) + '"  class="slds-dropdown__item slds-has-icon--left"><a href="#" class="slds-truncate" id="' + html_encode(key) + '" role="menuitemradio" onclick="setPicklistVal(this.innerHTML,this.id);">'+ html_encode(value)+ '</a></li>'));
+                                    
+                                      
+                                  });
+                             }
+                             else{
+                                   document.getElementById("AlertContent").innerHTML = html_encode("Configure The Setting Page."); 
+                                   var e = document.getElementById('alert');
+                                   e.style.display = 'block';
+                             
+                             }
+                        }
+                  ); 
+        }
+        
+        function DetectLanguage(){
+            autodetectflag=true;
+            var text= $("#inputtext").val().trim();
+            text = text.replace(/\n/g, ' ');
+            $('#rev').attr('disabled', 'disabled'); 
+            $('#tran').attr('disabled', 'disabled');
+            
+            //new autodetect
+            if(text==null || text==""){
+                    document.getElementById("AlertContent").innerHTML = html_encode("Enter Text In Input Text Area");
+                     var e = document.getElementById('alert');
+                     e.style.display = 'block';
+                     spinshow.style.display = 'none';
+                     $('#rev').removeAttr('disabled');
+                     $('#tran').removeAttr('disabled');
+            }
+            else{
+                
+                Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.LiveAgentChatWidget_Controller.DetectFromLanguage}',
+                                text,
+                                function(vfresult, event){
+                                   if(vfresult.isError== undefined || vfresult.isError == null ){
+                                               if(vfresult!=null){
+                                                 for(i=0;i<vfresult.result.length;i++){
+                                                     FromLanguagecode = vfresult.result[i].language.threeLetterCode;
+                                                     FromLanguage= vfresult.result[i].language.englishName;
+                                                     if ( $('ul li:contains("'+FromLanguage+'")').length ){
+                                                          
+                                                         
+                                                         setPicklistVal(FromLanguage,FromLanguagecode);
+                                                         showOrHideOption();
+                                                          
+                                                          break;
+                                                     }
+                                                     else{
+                                                         i++;
+                                                     }
+                                                 }
+                                                     if(document.getElementById('spanId_Selected').innerHTML =='Select' || document.getElementById('spanId_Selected').innerHTML ==null){
+                                                         document.getElementById("AlertContent").innerHTML = html_encode("Detected Language is not among Language Pairs");
+                                                         var e = document.getElementById('alert');
+                                                         e.style.display = 'block';
+                                                     }
+                                                     
+                                                  
+                                                     //spinshow.style.display = 'none';
+                                                     $('#rev').removeAttr('disabled');
+                                                     $('#tran').removeAttr('disabled');
+                                            
+                                            }
+
+                                   
+                                     }
+                                     else{
+                                              
+                                            document.getElementById("AlertContent").innerHTML = html_encode(vfresult.errorMessage);
+                                             var e = document.getElementById('alert');
+                                             e.style.display = 'block';
+                                             
+                                             $('#rev').removeAttr('disabled');
+                                             $('#tran').removeAttr('disabled');  
+                                         
+                                     }
+                                    
+                                },
+                                {escape: false}
+                          ); 
+            }
+        }
+        
+        
+        function Translate(){
+            var ef = document.getElementById('reverselangpair');
+            ef.style.display = 'none';
+            var text= $("#inputtext").val().trim();
+            var thefromlang;
+            var thetolang;
+            if(autodetectflag!=true){
+                thefromlang=fromlanguage
+                thetolang=tolanguage;
+            }
+            else{
+                 thefromlang=FromLanguagecode;
+                 thetolang=tolanguage;
+                 
+              }
+            var showingfromlang=document.getElementById('spanId_Selected').innerHTML;
+            var showingtolang=document.getElementById('spanId_Selected1').innerHTML ;
+            $('#rev').attr('disabled', 'disabled'); 
+            $('#tran').attr('disabled', 'disabled'); 
+             var spinshow= document.getElementById("smallspin");
+             $('#smallspin').css('margin-top', '42%');
+             spinshow.style.display = 'block';
+
+                                                     
+            if(thefromlang== null || thetolang==null || showingfromlang=='Select' || showingtolang=='Select'){
+                 document.getElementById("AlertContent").innerHTML = html_encode("Select From And To Language");
+                 var e = document.getElementById('alert');
+                 e.style.display = 'block';
+                 spinshow.style.display = 'none';
+                 $('#rev').removeAttr('disabled');
+                 $('#tran').removeAttr('disabled');
+              }
+            else{
+                 
+                 
+                if(text==null || text==""){
+                    
+                    document.getElementById("AlertContent").innerHTML = html_encode("Enter Text In Input Text Area");
+                     var e = document.getElementById('alert');
+                     e.style.display = 'block';
+                     spinshow.style.display = 'none';
+                     $('#rev').removeAttr('disabled');
+                     $('#tran').removeAttr('disabled');
+                }
+                else{
+                    if(thefromlang==thetolang){
+                       
+                       
+                         $("#outputtext").val(text);
+                         spinshow.style.display = 'none';
+                         $('#rev').removeAttr('disabled');
+                         $('#tran').removeAttr('disabled');
+                    }
+                    else{
+                           
+                            var e = document.getElementById('alert');
+                            e.style.display = 'none';
+                            Visualforce.remoting.Manager.invokeAction(
+                                    '{!$RemoteAction.LiveAgentChatWidget_Controller.TextTranslation}',
+                                        encodeURIComponent(text),thefromlang,thetolang,
+                                        function(result, event){
+                                            if(result.isError == null || result.isError == undefined){
+                                                  if(result!=null){
+                                                        $("#outputtext").val(result.translation);
+                                                        spinshow.style.display = 'none';
+                                                        $('#rev').removeAttr('disabled');
+                                                        $('#tran').removeAttr('disabled');
+                                                        ReverseTranslate();
+                                                     }
+                                             }
+                                            else{
+                                                  document.getElementById("AlertContent").innerHTML = html_encode(result.errorMessage);
+                                                  var e = document.getElementById('alert');
+                                                  e.style.display = 'block';
+                                                 spinshow.style.display = 'none';
+                                                 $('#rev').removeAttr('disabled');
+                                                 $('#tran').removeAttr('disabled');
+                                            } 
+                                        },
+                                        {escape: false}
+                                  ); 
+                    
+                    }
+                    
+                }
+                 
+               }                             
+          
+        }
+        
+        
+        function ReverseTranslate(){
+            //$('#outputtext').addClass('loadinggif');
+           // $("#loadinggif").show();
+             var e = document.getElementById('alert');
+             e.style.display = 'none';
+             var ef = document.getElementById('reverselangpair');
+             ef.style.display = 'none';
+             
+             
+             $('#rev').attr('disabled', 'disabled'); 
+             $('#tran').attr('disabled', 'disabled'); 
+             var spinshow= document.getElementById("smallspin");
+             $('#smallspin').css('margin-top', '71.5%');
+             spinshow.style.display = 'block';
+            var text= $("#outputtext").val();
+            
+            var thefromlang=tolanguage;
+            var thetolang;
+         
+            if(autodetectflag==true){
+                thetolang=FromLanguagecode;
+            }
+            else{
+                thetolang=fromlanguage;
+            }
+            var showingfromlang=document.getElementById('spanId_Selected').innerHTML;
+            var showingtolang=document.getElementById('spanId_Selected1').innerHTML ;
+            text = text.replace(/\n/g, ' ');
+            
+            
+            if(thefromlang== null || thetolang==null || showingfromlang=='Select' || showingtolang=='Select'){
+                 document.getElementById("AlertContent").innerHTML = html_encode("Select From And To Language");
+                 var e = document.getElementById('alert');
+                 e.style.display = 'block';
+                 $('#rev').removeAttr('disabled');
+                 $('#tran').removeAttr('disabled');
+                 spinshow.style.display = 'none';
+                 
+              }
+            else{
+                    
+                    if(text==null|| text==""){
+                         document.getElementById("AlertContent").innerHTML = html_encode("Translated Input Is Not Available");
+                         var e = document.getElementById('alert');
+                         e.style.display = 'block';
+                         $('#rev').removeAttr('disabled');
+                         $('#tran').removeAttr('disabled');
+                         spinshow.style.display = 'none';
+                    }
+                    else{    
+                            
+                            if(thefromlang==thetolang){
+                                   // document.getElementById("AlertContent").innerHTML = html_encode("Invalid Language Pair");
+                                    //var e = document.getElementById('alert');
+                                    //e.style.display = 'block';
+                                     //$("#outputtext").val(text);
+                                     
+                                     var oldtext= $("#inputtext").val().trim();
+                                     $("#reverseoutputtext").val(oldtext);
+                                     document.getElementById("langpairreverse").innerHTML = html_encode("("+showingtolang+"-->"+showingfromlang+")");
+                                     var ef = document.getElementById('reverselangpair');
+                                     ef.style.display = 'block';
+                                     
+                                     
+                                    // $("#reverseoutputtext").val(result.translation);
+                                     $('#rev').removeAttr('disabled');
+                                     $('#tran').removeAttr('disabled');
+                                     spinshow.style.display = 'none';
+                            }
+                            else{
+                                   
+                        
+                                    Visualforce.remoting.Manager.invokeAction(
+                                    '{!$RemoteAction.LiveAgentChatWidget_Controller.TextTranslation}',
+                                        encodeURIComponent(text),thefromlang,thetolang,
+                                        function(result, event){
+                                        if(result.isError == null || result.isError == undefined){
+                                              if(result!=null){
+                                                    
+                                                    document.getElementById("langpairreverse").innerHTML = html_encode("("+ToLanguageName+"-->"+FromLanguageName+")");
+                                                    var ef = document.getElementById('reverselangpair');
+                                                    ef.style.display = 'block';
+                                                    $("#reverseoutputtext").val(result.translation);
+                                                    
+                                                     $('#rev').removeAttr('disabled');
+                                                     $('#tran').removeAttr('disabled');
+                                                     spinshow.style.display = 'none';
+                
+                                                 }
+                                          }
+                                        else{
+                                                 document.getElementById("AlertContent").innerHTML = html_encode(result.errorMessage);
+                                                 var e = document.getElementById('alert');
+                                                 e.style.display = 'block';
+                                                 $('#rev').removeAttr('disabled');
+                                                 $('#tran').removeAttr('disabled');
+                                                 spinshow.style.display = 'none';
+                                          }
+                                          //$('#outputtext').removeClass('loadinggif');
+                                        },
+                                        {escape: false}
+                                  ); 
+                            }
+                            
+                      }
+                    
+              }
+            
+        }
+              
+ </script>
+ <style>
+  .formBodyDiv{
+      margin: 1% !important;
+  }
+  #width_tmp_select{
+      display : none;
+    }
+  </style>
+</apex:page>

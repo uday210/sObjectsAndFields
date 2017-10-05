@@ -1,0 +1,3 @@
+<aura:component access="global">
+  Simple Card is deprecated, use Branded Card instead.
+</aura:component>

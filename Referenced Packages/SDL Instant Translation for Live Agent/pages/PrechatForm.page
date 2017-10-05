@@ -1,0 +1,162 @@
+<apex:page controller="SDL_LC.LiveAgentChatWidget_Controller"  docType="html-5.0" showHeader="false" sidebar="false">
+
+  <html lang="en" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
+      <head>
+          <meta charset="utf-8"/>
+            <meta content="ie=edge" http-equiv="x-ua-compatible"/>
+            <meta content="width=device-width, initial-scale=1" name="viewport"/>
+            <meta content="Design System" name="apple-mobile-web-app-title"/>
+            <meta content="Design System" name="application-name"/>
+            <meta content="#ffffff" name="msapplication-TileColor"/>
+            <meta content="#ffffff" name="theme-color"/>
+            
+            <apex:stylesheet value="{!URLFOR($Resource.SDL_LC__LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/styles/salesforce-lightning-design-system-vf.css')}" />
+            <apex:stylesheet value="{!URLFOR($Resource.SDL_LC__LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/styles/SalesforceLightningDesignSystem.min.css')}" />
+            <apex:includeScript value="{!URLFOR($Resource.SDL_LC__liveAgent_static_Resources, '/liveagentStaticResources/jquery-1.12.0.js')}" />
+            <apex:includeScript value="{!URLFOR($Resource.SDL_LC__liveAgent_static_Resources, '/liveagentStaticResources/securefiltersmaster/lib/secure-filters.js')}" />
+            <script type="text/javascript">
+                var winHeight = $( window ).height();
+                contentDivheight = winHeight*0.95;
+                $("#contentDiv").height(contentDivheight);
+                
+                (function() {
+                    function handlePageLoad() {
+                    var endpointMatcher = new RegExp("[\\?\\&]endpoint=([^&#]*)");
+                    document.getElementById('prechatForm').setAttribute('action',
+                    decodeURIComponent(endpointMatcher.exec(document.location.search)[1]));
+                    } if (window.addEventListener) {
+                    window.addEventListener('load', handlePageLoad, false);
+                    } else { window.attachEvent('onload', handlePageLoad, false);
+                }})();
+           </script>
+           <style>
+               .panel-body {
+                       float: left;
+                       margin: 10px;
+                       
+                       
+                    } 
+           </style>
+      </head>
+      <body>
+          <div id="liveAgentDiv">
+            <div id="logoDiv" style="background-color:white;width:340px;height:60px;">
+                <img id="theImage" src="{!JSENCODE(customerlogo)}" style="width:100%;height:100%;" />
+            </div>
+            <div style="background-color:black;visibility:visible;border-top:solid 3.8px #9e9e9e !important;" >
+            </div>
+            <div id="contentDiv" style="margin-top:4%;margin-left:3%;">
+                <div class="slds">
+                  <form method="post" id="prechatForm">
+                     <table>
+                         <tr style="margin-top:2%;">
+                             <td>
+                                 <label class="slds slds-form-element__label" for="firstName" style="margin-left:20px;"> First Name </label>  
+                             </td>
+                             <td>
+                                 <input class="slds slds-input" id="firstName" maxlength="255" name="liveagent.prechat:contactFirstName" size="20" style="width:45%;margin-top:2%;" type="text" required="required"></input>
+                             </td>
+                         </tr>
+                         
+                        <tr style="margin-top:2%;">
+                             <td>
+                                 <label class="slds slds-form-element__label" for="lastName" style="margin-left:20px;"> Last Name </label>                                          
+                             </td>
+                             <td>
+                                 <input class="slds slds-input" id="lastName" maxlength="255" name="liveagent.prechat:contactLastName" size="20" style="width:45%;margin-top:2%;" type="text" autocomplete="off" required="required"></input>
+                             </td>
+                         </tr>
+                         
+                         <tr style="margin-top:2%;">
+                             <td>
+                                 <label class="slds slds-form-element__label" for="email" style="margin-left:20px;"> Email </label>                                          
+                             </td>
+                             <td>
+                                 <input class="slds slds-input" id="email" maxlength="255" name="liveagent.prechat:contactEmail" size="20" style="width:45%;margin-top:2%;" type="email" autocomplete="off" required="required"></input>
+                             </td>
+                         </tr>
+                         
+                         <tr style="margin-top:2%;">
+                             <td>
+                                 <label class="slds slds-form-element__label" for="subject" style="margin-left:20px;"> Subject </label>                                          
+                             </td>
+                             <td>
+                                 <input class="slds slds-input" id="subject" maxlength="255" name="liveagent.prechat:caseSubject" size="20" style="width:45%;margin-top:2%;" type="text" autocomplete="off" ></input>
+                             </td>
+                         </tr>
+                         
+                         <tr style="margin-top:2%;">
+                             <td>
+                                 <label class="slds slds-form-element__label" for="Phone" style="margin-left:20px;"> Phone </label>                                          
+                             </td>
+                             <td>
+                                 <input class="slds slds-input" id="phone" maxlength="255" name="liveagent.prechat:ContactPhone" size="20" style="width:45%;margin-top:2%;" type="text" pattern="[0-9]*" autocomplete="off" required="required"></input>
+                             </td>
+                         </tr>
+                                                
+                         
+                     </table>
+                     
+                     <!-- Hidden fields used to set additional custom details -->
+                     
+                     <input type="hidden" name="liveagent.prechat:CaseStatus" value="New" /><br />
+                     <!-- Used to set the visitor's name for the agent in the Console -->
+                     <input type="hidden" name="liveagent.prechat.name" id="prechat_field_name" />
+                     <!-- Map the detail inputs to the Contact fields --> 
+                     <input type="hidden" name="liveagent.prechat.findorcreate.map:Contact" value="FirstName,contactFirstName;LastName,contactLastName;Email,contactEmail,Phone,ContactPhone;" />
+                                            
+                     <!-- Try to find the Contact by email (exact match) -->
+                     <input type="hidden" name="liveagent.prechat.findorcreate.map.doFind:Contact" value="Email,true;" />
+                     <input type="hidden" name="liveagent.prechat.findorcreate.map.isExactMatch:Contact" value="Email,true;" />
+                                            
+                     <!-- If the Contact is not found, then create one with the following fields set -->
+                     <input type="hidden" name="liveagent.prechat.findorcreate.map.doCreate:Contact" value="FirstName,true;LastName,true;Email,true;Phone,true;" />
+                                            
+                     <!-- Save the Contact on the Live Chat Transcript's Contact Loookup -->
+                     <input type="hidden" name="liveagent.prechat.findorcreate.saveToTranscript:Contact" value="Contact" />
+                                            
+                     <!-- Show the Contact when it is found or created -->
+                     <input type="hidden" name="liveagent.prechat.findorcreate.showOnCreate:Contact" value="true" />
+                     
+                     
+                                            
+                     <!-- Create a Case every time -->
+                     <input type="hidden" name="liveagent.prechat:caseOrigin" value="Chat" />
+                     <input type="hidden" name="liveagent.prechat.findorcreate.map:Case" value="Origin,caseOrigin;Subject,caseSubject;" />
+                     <input type="hidden" name="liveagent.prechat.findorcreate.map.doCreate:Case" value="Origin,true;Subject,true;" />
+                     <input type="hidden" name="liveagent.prechat.findorcreate.saveToTranscript:Case" value="Case" />
+                     <input type="hidden" name="liveagent.prechat.findorcreate.showOnCreate:Case" value="true" />
+                                            
+                     <!-- Link the Contact to the Case -->
+                     <input type= "hidden" name="liveagent.prechat.findorcreate.linkToEntity:Contact" value="Case,ContactId" />
+                                            
+                     <!--Footer-->
+                     <div class="slds slds-panel-footer" > 
+                         <center><input type="submit" id="prechat_submit" class="slds slds-button slds slds-button--brand" value="Request Chat" style="width=40%;margin-top:3%;margin-left:-3%;" onclick="setName()" /></center>           
+                     </div><br /><br />
+                                            
+                     <!-- Set the visitor's name for the agent in the Console to first and last name provided by the customer -->
+                                            
+                     <script type="text/javascript">
+                         var languageid;
+                         var LanguageName;
+                         $( document ).ready(function() {      
+                           getLanguagePairs();
+                        });
+                     
+                         function setName() {
+                              document.getElementById("prechat_field_name").value =  
+                              document.getElementById("firstName").value + " " + document.getElementById("lastName").value ;
+                              
+                         }
+                         
+                         
+                     </script>
+                  </form>     
+                </div>
+            </div>
+          </div>
+      </body>
+  </html>
+  
+</apex:page>

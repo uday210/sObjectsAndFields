@@ -1,0 +1,3 @@
+<apex:page standardController="Solution" cache="false" showHeader="false" sidebar="false" standardStylesheets="false">
+    <c:Quip_VFComponent />
+</apex:page>

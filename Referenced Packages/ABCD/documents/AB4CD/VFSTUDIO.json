@@ -1,0 +1,978 @@
+{
+	"components": 
+		[
+			{ 
+				"Id":"One",
+				"Name":"page",
+				"Label":"Page",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Standard",
+				"Description":"Visualforce Page",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":false,
+				"Container":true,
+				"Droppables":"buildPanel",
+				"DisplayTemplate":"ApexPageTemplate",
+				"Extensions":"Steroid.RuntimeExtension",
+				"LifeCount":"0",
+				"Sortable":"y",
+				"dropId":"buildPanel",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"RadioRow","Name":"showHeader","Label":"Show Header", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"sidebar","Label":"Show Sidebar", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"Text","Name":"standardController","Label":"Page Object", "Mandatory":false, "Readonly":true},
+					{"Type":"TextArea","Name":"extensions","Label":"Extensions", "Mandatory":false, "Readonly":false},
+					{"Type":"Helper","Draggable":true,"Droppables":"apex:page","PropertyTemplate":"ListsHelperTemplate", "DropTemplate":"ApexRelatedListTemplate", "Name":"lists","Label":"Related Lists","InitAction":"ABCD.CONTEXT.LISTS", "tab":"Related", "Exclusions":"CONTEXT.LISTS"},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"sectionHeader",
+				"Label":"Page Header",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Headers",
+				"Description":"Page Title and Sub-Title Values",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:page",
+				"DisplayTemplate":"ApexSectionHeaderTemplate",
+				"LifeCount":"1",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"title","Label":"Title","Mandatory":false, "Value":"ABCD"}, 
+					{"Type":"Text","Name":"subtitle","Label":"Sub Title","Mandatory":false,"Value":"VF Page"},
+					{"Type":"TextArea","Name":"description","Label":"Description","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"form",
+				"Label":"Form",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Forms",
+				"Description":"Apex Form",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Droppables":"apex:page,AB4CD:GridColumn,c:GridColumn",
+				"LifeCount":"*",
+				"Sortable":"y",
+				"DisplayTemplate":"ApexFormTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"styleClass","Label":"Style Class","Mandatory":false},
+					{"Type":"Text","Name":"style","Label":"Style","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"pageBlock",
+				"Label":"Block",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Blocks & Sections",
+				"Description":"Page Block",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Droppables":"apex:form,apex:tab,apex:panelBarItem,AB4CD:GridColumn,c:GridColumn,AB4CD:Step,c:Step",
+				"LifeCount":"*",
+				"Sortable":"y",
+				"DisplayTemplate":"ApexPageBlockTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"title","Label":"Title","Mandatory":false},
+					{"Type":"Radio","Name":"mode","Label":"Display Mode","Value":"Edit","Options":[{"Label":"Edit", "Value":"edit"},{"Label":"Detail", "Value":"detail"},{"Label":"Main Detail", "Value":"maindetail"},{"Label":"Inline Edit", "Value":"inlineEdit "}], "Mandatory":false},
+					{"Type":"Text","Name":"tabStyle","Label":"Tab Style","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"pageBlockButtons",
+				"Label":"Actions Bar",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Buttons & Links",
+				"Description":"Apex Form",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Droppables":"apex:pageBlock",
+				"LifeCount":"*",
+				"DisplayTemplate":"ApexPageBlockButtonsTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"RadioRow","Name":"location","Label":"Location","Options":[{"Label":"Top", "Value":"top"},{"Label":"Bottom", "Value":"bottom"},{"Label":"Both", "Value":"both"}], "Mandatory":false},
+					{"Type":"Text","Name":"styleClass","Label":"Style Class","Mandatory":false},
+					{"Type":"Text","Name":"style","Label":"Style","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false},
+					{"Type":"Helper","Draggable":true,"Droppables":"blockActions","tab":"Buttons","PropertyTemplate":"ButtonsHelperTemplate", "DropTemplate":"ApexCommandButtonTemplate", "Name":"Buttons","Label":"Buttons","InitAction":"ABCD.CONTEXT.ACTIONS"}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"commandButton",
+				"Label":"Command Button",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Buttons & Links",
+				"Description":"Command Button",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Droppables":"apex:pageBlockButtons",
+				"Hidden":false,
+				"LifeCount":"*",
+				"DisplayTemplate":"ApexCommandButtonTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"value","Label":"Label","Mandatory":false,"Value":"Button"}, 
+					{"Type":"Text","Name":"action","Label":"Action","Mandatory":false},
+					{"Type":"Text","Name":"styleClass","Label":"Style Class","Mandatory":false},
+					{"Type":"Text","Name":"style","Label":"Style","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"commandLink",
+				"Label":"Command Link",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Buttons & Links",
+				"Description":"Command Link",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Droppables":"apex:pageBlockButtons",
+				"LifeCount":"*",
+				"Hidden":false,
+				"DisplayTemplate":"ApexCommandLinkTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"value","Label":"Label","Mandatory":false,"Value":"Link"}, 
+					{"Type":"Text","Name":"action","Label":"Action","Mandatory":false},
+					{"Type":"Text","Name":"styleClass","Label":"Style Class","Mandatory":false},
+					{"Type":"Text","Name":"style","Label":"Style","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"pageBlockSection",
+				"Label":"Section",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Blocks & Sections",
+				"Description":"Page Block Section",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Droppables":"apex:pageBlock,apex:outputPanel",
+				"LifeCount":"*",
+				"DelayAction":"adjustColumnStyle",
+				"Sortable":"y",
+				"DisplayTemplate":"ApexPageBlockSectionTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"title","Label":"Title", "Mandatory":false},
+					{"Type":"RadioRow","Name":"columns","Label":"Columns","Value":"2", "Options":[{"Label":"One", "Value":"1"},{"Label":"Two", "Value":"2"}], "Mandatory":false},
+					{"Type":"RadioRow","Name":"collapsible","Label":"Collapsible?", "Value":"No", "Mandatory":false, "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"showHeader","Label":"Display Header?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false},
+					{"Type":"Helper","Draggable":true,"Droppables":"sectionFields","PropertyTemplate":"FieldsHelperTemplate", "DropTemplate":"ApexInputFieldTemplate", "Name":"Fields","Label":"Fields","InitAction":"ABCD.CONTEXT.FIELDS", "tab":"Fields", "Exclusions":"CONTEXT.FIELDS"}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"inputField",
+				"Label":"Input Field",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Exclusions":"CONTEXT.FIELDS",
+				"Category":"Blocks & Sections",
+				"Description":"Apex Input Field",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Hidden":true,
+				"Droppables":"apex:pageBlockSection",
+				"LifeCount":"*",
+				"DisplayTemplate":"ApexInputFieldTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"label","Label":"Label","Mandatory":false},
+					{"Type":"Text","Name":"value","Label":"Value","Mandatory":false, "Readonly":true},
+					{"Type":"RadioRow","Name":"required","Label":"Required?", "Mandatory":false, "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"Text","Name":"styleClass","Label":"Style Class","Mandatory":false},
+					{"Type":"Text","Name":"style","Label":"Style","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"outputField",
+				"Label":"Output Field",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Exclusions":"CONTEXT.FIELDS",
+				"Category":"Blocks & Sections",
+				"Description":"Apex Output Field",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Hidden":true,
+				"Droppables":"apex:pageBlockSection",
+				"LifeCount":"*",
+				"DisplayTemplate":"ApexOutputFieldTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"label","Label":"Label","Mandatory":false},
+					{"Type":"Text","Name":"value","Label":"Value","Mandatory":false, "Readonly":true},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"outputPanel",
+				"Label":"Output Panel",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Blocks & Sections",
+				"Description":"Apex Output Panel",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Hidden":false,
+				"Droppables":"apex:page,apex:pageBlock",
+				"LifeCount":"*",
+				"DisplayTemplate":"ApexOutputPanelTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"layout","Label":"Layout","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"messages",
+				"Label":"Messages",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Blocks & Sections",
+				"Description":"Apex Messages",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Hidden":false,
+				"Droppables":"apex:page",
+				"LifeCount":"*",
+				"DisplayTemplate":"ApexMessagesTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"layout","Label":"Layout","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"relatedList",
+				"Label":"Related List",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Exclusions":"CONTEXT.LISTS",
+				"Category":"Blocks & Sections",
+				"Description":"Related List",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Hidden":true,
+				"Droppables":"apex:page",
+				"LifeCount":"*",
+				"DisplayTemplate":"ApexRelatedListTemplate",
+				"Attributes":
+				[ 
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"list","Label":"List","Mandatory":false, "Readonly":true},
+					{"Type":"Text","Name":"title","Label":"Title","Mandatory":false},
+					{"Type":"Text","Name":"pageSize","Label":"List Size","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"tabPanel",
+				"Label":"Tabs",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Tabs & Panels",
+				"Description":"Apex Tab Panel",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Droppables":"apex:page,apex:form,AB4CD:GridColumn,c:GridColumn",
+				"LifeCount":"*",
+				"DisplayTemplate":"ApexTabPanelTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"RadioRow","Name":"headerAlignment","Label":"Tab Alignment","Mandatory":false,"options":[{"Label":"Left", "Value":"left"},{"Label":"Right", "Value":"right"}], "Value":"left"},
+					{"Type":"Radio","Name":"switchType","Label":"Switch Type", "Value":"client", "Mandatory":false, "options":[{"Label":"Client", "Value":"client"},{"Label":"Server", "Value":"server"},{"Label":"Ajax", "Value":"ajax"}]},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false},
+					{"Type":"Text","Name":"activeTabClass","Label":"Active Tab Class","Mandatory":false, "Tab":"Styles", "Value":"activeTabClass"},
+					{"Type":"Text","Name":"inactiveTabClass","Label":"Inactive Tab Class","Mandatory":false, "Tab":"Styles", "Value":"inactiveTabClass"},
+					{"Type":"Text","Name":"headerClass","Label":"Header Class","Mandatory":false, "Tab":"Styles", "Value":"tabHeaderClass"},
+					{"Type":"Text","Name":"headerClass","Label":"Header Class","Mandatory":false, "Tab":"Styles", "Value":"tabHeaderClass"},
+					{"Type":"Text","Name":"contentclass","Label":"Content Class","Mandatory":false, "Tab":"Styles", "Value":"tabContentClass"}
+					
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"tab",
+				"Label":"Tab",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Tabs & Panels",
+				"Description":"Apex Tab Panel",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Droppables":"apex:tabPanel",
+				"LifeCount":"*",
+				"Hidden":true,
+				"Sortable":"y",
+				"DisplayTemplate":"ApexTabTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"name","Label":"Name","Mandatory":false},
+					{"Type":"Text","Name":"label","Label":"Label","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"panelBar",
+				"Label":"Panels",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Tabs & Panels",
+				"Description":"Panel Bar",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Droppables":"apex:page,apex:form",
+				"LifeCount":"*",
+				"DisplayTemplate":"ApexPanelBarTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false},
+					{"Type":"Text","Name":"styleClass","Label":"Style Class","Mandatory":false, "Tab":"Styles", "Value":"panelBarStyle"},
+					{"Type":"Text","Name":"headerClass","Label":"Active Header Class","Mandatory":false, "Tab":"Styles", "Value":"panelBarHeaderClass"},
+					{"Type":"Text","Name":"headerClassActive","Label":"Style Class","Mandatory":false, "Tab":"Styles", "Value":"panelBarHeaderActiveClass"},
+					{"Type":"Radio","Name":"switchType","Label":"Switch Type?", "Mandatory":false, "options":[{"Label":"Client", "Value":"client"},{"Label":"Server", "Value":"server"},{"Label":"Ajax", "Value":"ajax"}]}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"panelBarItem",
+				"Label":"Panel",
+				"Type":"Visualforce",
+				"NameSpace":"apex",
+				"Category":"Tabs & Panels",
+				"Description":"Apex Panel Bar Item",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Droppables":"apex:panelBar",
+				"LifeCount":"*",
+				"Hidden":true,
+				"DisplayTemplate":"ApexPanelBarItemTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"name","Label":"Name","Mandatory":false},
+					{"Type":"Text","Name":"label","Label":"Label","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"Library",
+				"Label":"Library",
+				"Type":"Visualforce",
+				"NameSpace":"AB4CD",
+				"Category":"ABCD",
+				"Description":"ABCD Library",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:page",
+				"LifeCount":"*",
+				"DisplayTemplate":"ABCDLibraryTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"id","Label":"Id","Mandatory":false,"Value":"ABCD"}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"Library",
+				"Label":"Library",
+				"Type":"Visualforce",
+				"NameSpace":"c",
+				"Category":"ABCD",
+				"Description":"ABCD Library",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:page",
+				"Hidden":true,
+				"LifeCount":"*",
+				"DisplayTemplate":"ABCDLibraryTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"id","Label":"Id","Mandatory":false,"Value":"ABCD"}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"SimpleList",
+				"Label":"Simple List",
+				"Type":"Visualforce",
+				"NameSpace":"AB4CD",
+				"Category":"ABCD",
+				"Description":"ABCD Simple List",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:form,apex:tab,apex:panelBarItem,AB4CD:GridColumn,c:GridColumn",
+				"LifeCount":"*",
+				"DisplayTemplate":"ABCDSimpleListTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"List","Name":"Object","Label":"Object","Mandatory":true,  "Options":[{"Label":"--None--", "Value":""}],"InitAction":"ABCD.GLOBAL.OBJECTS","ActionEvent":"OnChange", "ActionFunction":"loadListFields", "ActionTarget":"Fields"}, 
+					{"Type":"Text","Name":"Title","Label":"Title","Mandatory":false, "Value":"Steroid Smartlist"},
+					{"Type":"Text","Name":"Name","Label":"Name","Mandatory":true},
+					{"Type":"Text","Name":"nameField","Label":"Name Field"},
+					{"Type":"Text","Name":"ListPageSize","Label":"Page Size","Mandatory":false, "Value":"5"},
+					{"Type":"Text","Name":"WhereClause","Label":"Where Clause","Mandatory":false},
+					{"Type":"Text","Name":"summary","Label":"Summary Fields","Mandatory":false},
+					{"Type":"TextArea","Name":"ColumnGroups","Label":"Column Groups","Mandatory":false},
+					{"Type":"RadioRow","Name":"DetailsLink","Label":"Details Link?", "Mandatory":false,"Value":"false", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"Editable","Label":"Editable?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"collapsible","Label":"Collapsible?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"New","Label":"New?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"PageStats","Label":"Show Pagination Controls", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"Fragmented","Sortable":"y","Name":"Columns","Label":"Columns","Mandatory":false, "Separator":",","PlaceHolder":"Drag Fields into this sesction" },
+					{"Type":"Helper","tab":"Fields","Draggable":true,"Droppables":"listColumns","PropertyTemplate":"ListFieldHelperTemplate", "DropTemplate":"ListFieldDropTemplate", "Name":"Fields","Label":"Fields","InitAction":"InitializeListFields","InitParams":"Object","Exclusions":"Columns"},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"SimpleList",
+				"Label":"Simple List",
+				"Type":"Visualforce",
+				"NameSpace":"c",
+				"Category":"ABCD",
+				"Description":"ABCD Simple List",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:form,apex:tab,apex:panelBarItem,AB4CD:GridColumn,c:GridColumn",
+				"LifeCount":"*",
+				"Hidden":true,
+				"DisplayTemplate":"ABCDSimpleListTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"List","Name":"Object","Label":"Object","Mandatory":true,  "Options":[{"Label":"--None--", "Value":""}],"InitAction":"ABCD.GLOBAL.OBJECTS","ActionEvent":"OnChange", "ActionFunction":"loadListFields", "ActionTarget":"Fields"}, 
+					{"Type":"Text","Name":"Title","Label":"Title","Mandatory":false, "Value":"Steroid Smartlist"},
+					{"Type":"Text","Name":"Name","Label":"Name","Mandatory":true},
+					{"Type":"Text","Name":"nameField","Label":"Name Field"},
+					{"Type":"Text","Name":"ListPageSize","Label":"Page Size","Mandatory":false, "Value":"5"},
+					{"Type":"Text","Name":"WhereClause","Label":"Where Clause","Mandatory":false},
+					{"Type":"Text","Name":"summary","Label":"Summary Fields","Mandatory":false},
+					{"Type":"TextArea","Name":"ColumnGroups","Label":"Column Groups","Mandatory":false},
+					{"Type":"RadioRow","Name":"DetailsLink","Label":"Details Link?", "Mandatory":false,"Value":"false", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"Editable","Label":"Editable?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"collapsible","Label":"Collapsible?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"New","Label":"New?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"PageStats","Label":"Show Pagination Controls", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"Fragmented","Sortable":"y","Name":"Columns","Label":"Columns","Mandatory":false, "Separator":",","PlaceHolder":"Drag Fields into this sesction" },
+					{"Type":"Helper","tab":"Fields","Draggable":true,"Droppables":"listColumns","PropertyTemplate":"ListFieldHelperTemplate", "DropTemplate":"ListFieldDropTemplate", "Name":"Fields","Label":"Fields","InitAction":"InitializeListFields","InitParams":"Object","Exclusions":"Columns"},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"SmartList",
+				"Label":"Smart List",
+				"Type":"Visualforce",
+				"NameSpace":"AB4CD",
+				"Category":"ABCD",
+				"Description":"ABCD Smart List",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:form,apex:tab,apex:panelBarItem,AB4CD:GridColumn,c:GridColumn",
+				"LifeCount":"*",
+				"DisplayTemplate":"ABCDSmartListTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"List","Name":"Object","Label":"Object","Mandatory":true,  "Options":[{"Label":"--None--", "Value":""}],"InitAction":"ABCD.GLOBAL.OBJECTS","ActionEvent":"OnChange", "ActionFunction":"loadListFields", "ActionTarget":"Fields"}, 
+					{"Type":"Text","Name":"Title","Label":"Title","Mandatory":false, "Value":"Steroid Smartlist"},
+					{"Type":"Text","Name":"Name","Label":"Name","Mandatory":true},
+					{"Type":"Text","Name":"nameField","Label":"Name Field"},
+					{"Type":"Text","Name":"ListPageSize","Label":"Page Size","Mandatory":false, "Value":"5"},
+					{"Type":"Text","Name":"WhereClause","Label":"Where Clause","Mandatory":false},
+					{"Type":"Text","Name":"summary","Label":"Summary Fields","Mandatory":false},
+					{"Type":"TextArea","Name":"ColumnGroups","Label":"Column Groups","Mandatory":false},
+					{"Type":"RadioRow","Name":"filters","Label":"Filters?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"ColumnSelection","Label":"Column Selection?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"MassActions","Label":"Mass Actions?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"DetailsLink","Label":"Details Link?", "Mandatory":false,"Value":"false", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"Editable","Label":"Editable?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"collapsible","Label":"Collapsible?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"New","Label":"New?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"PageStats","Label":"Show Pagination Controls", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"Fragmented","Sortable":"y","Name":"Columns","Label":"Columns","Mandatory":false, "Separator":",","PlaceHolder":"Drag Fields into this sesction" },
+					{"Type":"Helper","tab":"Fields","Draggable":true,"Droppables":"listColumns","PropertyTemplate":"ListFieldHelperTemplate", "DropTemplate":"ListFieldDropTemplate", "Name":"Fields","Label":"Fields","InitAction":"InitializeListFields","InitParams":"Object","Exclusions":"Columns"},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"SmartList",
+				"Label":"Smart List",
+				"Type":"Visualforce",
+				"NameSpace":"c",
+				"Category":"ABCD",
+				"Description":"ABCD Smart List",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:form,apex:tab,apex:panelBarItem,AB4CD:GridColumn,c:GridColumn",
+				"LifeCount":"*",
+				"Hidden":true,
+				"DisplayTemplate":"ABCDSmartListTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"List","Name":"Object","Label":"Object","Mandatory":true,  "Options":[{"Label":"--None--", "Value":""}],"InitAction":"ABCD.GLOBAL.OBJECTS","ActionEvent":"OnChange", "ActionFunction":"loadListFields", "ActionTarget":"Fields"}, 
+					{"Type":"Text","Name":"Title","Label":"Title","Mandatory":false, "Value":"Steroid Smartlist"},
+					{"Type":"Text","Name":"Name","Label":"Name","Mandatory":true},
+					{"Type":"Text","Name":"nameField","Label":"Name Field"},
+					{"Type":"Text","Name":"ListPageSize","Label":"Page Size","Mandatory":false, "Value":"5"},
+					{"Type":"Text","Name":"WhereClause","Label":"Where Clause","Mandatory":false},
+					{"Type":"Text","Name":"summary","Label":"Summary Fields","Mandatory":false},
+					{"Type":"TextArea","Name":"ColumnGroups","Label":"Column Groups","Mandatory":false},
+					{"Type":"RadioRow","Name":"DetailsLink","Label":"Details Link?", "Mandatory":false,"Value":"false", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"Editable","Label":"Editable?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"filters","Label":"Filters?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"ColumnSelection","Label":"Column Selection?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"MassActions","Label":"Mass Actions?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"collapsible","Label":"Collapsible?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"New","Label":"New?", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"PageStats","Label":"Show Pagination Controls", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"Fragmented","Sortable":"y","Name":"Columns","Label":"Columns","Mandatory":false, "Separator":",","PlaceHolder":"Drag Fields into this sesction" },
+					{"Type":"Helper","tab":"Fields","Draggable":true,"Droppables":"listColumns","PropertyTemplate":"ListFieldHelperTemplate", "DropTemplate":"ListFieldDropTemplate", "Name":"Fields","Label":"Fields","InitAction":"InitializeListFields","InitParams":"Object","Exclusions":"Columns"},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"lout",
+				"Label":"Lightning Component",
+				"Type":"Visualforce",
+				"NameSpace":"AB4CD",
+				"Category":"ABCD",
+				"Description":"Lightning Component",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:page,apex:tab,apex:panelBarItem,AB4CD:GridColumn,c:GridColumn",
+				"LifeCount":"*",
+				"DisplayTemplate":"ABCDLOUTTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"app","Label":"Lightning App Name","Mandatory":true,"Value":"c:lcvfTest"}, 
+					{"Type":"Text","Name":"comp","Label":"Lightning Component","Mandatory":true, "Value":"ui:button"},
+					{"Type":"TextArea","Name":"params","Label":"Properties (JSON)","Mandatory":false, "Value":"{'label':'Clerisoft'}"},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"lout",
+				"Label":"Lightning Component",
+				"Type":"Visualforce",
+				"NameSpace":"c",
+				"Category":"ABCD",
+				"Description":"Lightning Component",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:page,apex:tab,apex:panelBarItem,AB4CD:GridColumn,c:GridColumn",
+				"LifeCount":"*",
+				"Hidden":true,
+				"DisplayTemplate":"ABCDLOUTTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"app","Label":"Lightning App Naame","Mandatory":true,"Value":"AB4CD:LightningApp"}, 
+					{"Type":"Text","Name":"comp","Label":"Lightning Component","Mandatory":true, "Value":"Steroid:RemindMe"},
+					{"Type":"TextArea","Name":"params","Label":"Component Properties (JSON)","Mandatory":true, "Value":"{'Title':'Remind Me'}"},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"textBox",
+				"Label":"Textbox",
+				"Type":"Visualforce",
+				"NameSpace":"",
+				"Category":"HTML",
+				"Description":"Page Title and Sub-Title Values",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"AsIs":true,
+				"Droppables":"apex:page",
+				"LifeCount":"1",
+				"DisplayTemplate":"TextBoxTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"id","Label":"Id","Mandatory":false}, 
+					{"Type":"Text","Name":"style","Label":"Style","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"Grid",
+				"Label":"Grid",
+				"Type":"Visualforce",
+				"NameSpace":"AB4CD",
+				"Category":"ABCD",
+				"Description":"Columns Component",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:page,apex:form,apex:pageBlock,apex:tab",
+				"DisplayTemplate":"ABCDGridTemplate",
+				"LifeCount":"1",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"title","Label":"Title","Mandatory":false, "Value":"ABCD"}, 
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"Grid",
+				"Label":"Grid",
+				"Type":"Visualforce",
+				"NameSpace":"c",
+				"Category":"ABCD",
+				"Description":"Columns Component",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Hidden":true,
+				"Droppables":"apex:page,apex:form,apex:pageBlock,apex:tab",
+				"DisplayTemplate":"ABCDGridTemplate",
+				"LifeCount":"1",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"title","Label":"Title","Mandatory":false, "Value":"ABCD"}, 
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"GridColumn",
+				"Label":"Grid Column",
+				"Type":"Visualforce",
+				"NameSpace":"AB4CD",
+				"Category":"ABCD",
+				"Description":"Column Component",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"AB4CD:Grid,c:Grid",
+				"DelayAction":"adjustGridColumnsWidth",
+				"DisplayTemplate":"ABCDGridColumnTemplate",
+				"LifeCount":"1",
+				"Hidden":true,
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"title","Label":"Title","Mandatory":false, "Value":"ABCD"}, 
+					{"Type":"Text","Name":"span","Label":"Column Span","Mandatory":false, "Value":"1"}, 
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"GridColumn",
+				"Label":"Grid Column",
+				"Type":"Visualforce",
+				"NameSpace":"c",
+				"Category":"ABCD",
+				"Description":"Column Component",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"AB4CD:Grid,c:Grid",
+				"Hidden":true,
+				"DelayAction":"adjustGridColumnsWidth",
+				"DisplayTemplate":"ABCDGridColumnTemplate",
+				"LifeCount":"1",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"title","Label":"Title","Mandatory":false, "Value":"ABCD"}, 
+					{"Type":"Text","Name":"span","Label":"Column Span","Mandatory":false, "Value":"1"}, 
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"QuickCreate",
+				"Label":"Quick Create",
+				"Type":"Visualforce",
+				"NameSpace":"AB4CD",
+				"Category":"ABCD",
+				"Description":"ABCD Quick Create",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:tab,apex:panelBarItem,AB4CD:GridColumn,c:GridColumn",
+				"LifeCount":"*",
+				"DisplayTemplate":"ABCDQuickCreateTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"List","Name":"Object","Label":"Object","Mandatory":true,  "Options":[{"Label":"--None--", "Value":""}],"InitAction":"ABCD.GLOBAL.OBJECTS","ActionEvent":"OnChange", "ActionFunction":"loadListFields", "ActionTarget":"Fields"}, 
+					{"Type":"Text","Name":"Title","Label":"Title","Mandatory":false, "Value":"Quick Create"},
+					{"Type":"RadioRow","Name":"Flow","Label":"Layout","Mandatory":false, "Value":"Vertical","Options":[{"Label":"Tabular", "Value":"Tabular"},{"Label":"Vertical", "Value":"Vertical"},{"Label":"Horizontal", "Value":"Horizontal"}]},
+					{"Type":"Text","Name":"columns","Label":"Table Columns", "Mandatory":false,"Value":"2"},
+					{"Type":"RadioRow","Name":"headerLabels","Label":"Bold Headers", "Mandatory":false,"Value":"false","options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"RadioRow","Name":"PageStats","Label":"Show Pagination Controls", "Mandatory":false,"Value":"true", "options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"Fragmented","Sortable":"y","Name":"FieldsList","Label":"Fields","Mandatory":false, "Separator":",","PlaceHolder":"Drag Fields into this sesction" },
+					{"Type":"Helper","tab":"Fields","Draggable":true,"Droppables":"qcFields","PropertyTemplate":"ListFieldHelperTemplate", "DropTemplate":"QCFieldDropTemplate", "Name":"Fields","Label":"Fields","InitAction":"InitializeQCFields","InitParams":"Object"},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"QuickCreate",
+				"Label":"Quick Create",
+				"Type":"Visualforce",
+				"NameSpace":"c",
+				"Category":"ABCD",
+				"Description":"ABCD Quick Create",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:tab,apex:panelBarItem,AB4CD:GridColumn,c:GridColumn",
+				"LifeCount":"*",
+				"Hidden":true,
+				"DisplayTemplate":"ABCDQuickCreateTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"List","Name":"Object","Label":"Object","Mandatory":true,  "Options":[{"Label":"--None--", "Value":""}],"InitAction":"ABCD.GLOBAL.OBJECTS","ActionEvent":"OnChange", "ActionFunction":"loadListFields", "ActionTarget":"Fields"}, 
+					{"Type":"Text","Name":"Title","Label":"Title","Mandatory":false, "Value":"Quick Create"},
+					{"Type":"Text","Name":"Runtime","Label":"Runtime","Mandatory":false, "Value":"{!Runtime}","Readonly":true},
+					{"Type":"RadioRow","Name":"Flow","Label":"Layout","Mandatory":false, "Value":"Vertical","Options":[{"Label":"Tabular", "Value":"Tabular"},{"Label":"Vertical", "Value":"Vertical"},{"Label":"Horizontal", "Value":"Horizontal"}]},
+					{"Type":"Text","Name":"columns","Label":"Table Columns", "Mandatory":false,"Value":"2"},
+					{"Type":"RadioRow","Name":"headerLabels","Label":"Bold Headers", "Mandatory":false,"Value":"false","options":[{"Label":"Yes", "Value":"true"},{"Label":"No", "Value":"false"}]},
+					{"Type":"Fragmented","Sortable":"y","Name":"FieldsList","Label":"Fields","Mandatory":false, "Separator":",","PlaceHolder":"Drag Fields into this sesction" },
+					{"Type":"Helper","tab":"Fields","Draggable":true,"Droppables":"qcFields","PropertyTemplate":"ListFieldHelperTemplate", "DropTemplate":"QCFieldDropTemplate", "Name":"Fields","Label":"Fields","InitAction":"InitializeQCFields","InitParams":"Object"},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"Wizard",
+				"Label":"Wizard",
+				"Type":"Visualforce",
+				"NameSpace":"AB4CD",
+				"Category":"ABCD",
+				"Description":"ABCD Wizard Template",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:form,apex:tab,apex:panelBarItem,AB4CD:GridColumn,c:GridColumn",
+				"LifeCount":"*",
+				"DisplayTemplate":"ABCDWizardTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"Title","Label":"Title","Mandatory":false, "Value":"Quick Create"},
+					{"Type":"Text","Name":"SubTitle","Label":"Sub Title","Mandatory":false, "Value":"Quick Create"},
+					{"Type":"Text","Name":"Steps","Label":"Wizard Steps", "Mandatory":false,"Value":"2"},
+					{"Type":"Text","Name":"Runtime","Label":"Runtime","Mandatory":false, "Value":"{!Runtime}","Readonly":true},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"Wizard",
+				"Label":"Wizard",
+				"Type":"Visualforce",
+				"NameSpace":"c",
+				"Category":"ABCD",
+				"Description":"ABCD Wizard Template",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"apex:form,apex:tab,apex:panelBarItem,AB4CD:GridColumn,c:GridColumn",
+				"LifeCount":"*",
+				"hidden":true,
+				"DisplayTemplate":"ABCDWizardTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"Title","Label":"Title","Mandatory":false, "Value":"Quick Create"},
+					{"Type":"Text","Name":"SubTitle","Label":"Sub Title","Mandatory":false, "Value":"Quick Create"},
+					{"Type":"Text","Name":"Steps","Label":"Wizard Steps", "Mandatory":false,"Value":"2"},
+					{"Type":"Text","Name":"Runtime","Label":"Runtime","Mandatory":false, "Value":"{!Runtime}","Readonly":true},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"Step",
+				"Label":"Wizard Step",
+				"Type":"Visualforce",
+				"NameSpace":"AB4CD",
+				"Category":"ABCD",
+				"Description":"ABCD Wizard Step Template",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Droppables":"AB4CD:Wizard,c:Wizard",
+				"DelayAction":"adjustWSColumnStyle",
+				"LifeCount":"*",
+				"DisplayTemplate":"ABCDWizardStepTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"Runtime","Label":"Runtime","Mandatory":false, "Value":"{!Runtime}","Readonly":true},
+					{"Type":"Text","Name":"Position","Label":"Step Position","Mandatory":true},
+					{"Type":"TextArea","Name":"Guidance","Label":"Guidance","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"Step",
+				"Label":"Wizard Step",
+				"Type":"Visualforce",
+				"NameSpace":"c",
+				"Category":"ABCD",
+				"Description":"ABCD Wizard Step Template",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":true,
+				"Droppables":"AB4CD:Wizard,c:Wizard",
+				"LifeCount":"*",
+				"DelayAction":"adjustWSColumnStyle",
+				"hidden":true,
+				"DisplayTemplate":"ABCDWizardStepTemplate",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"Runtime","Label":"Runtime","Mandatory":false, "Value":"{!Runtime}","Readonly":true},
+					{"Type":"Text","Name":"Position","Label":"Step Position","Mandatory":true},
+					{"Type":"TextArea","Name":"Guidance","Label":"Guidance","Mandatory":false},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"SmartRule",
+				"Label":"Display Rule",
+				"Type":"Visualforce",
+				"NameSpace":"AB4CD",
+				"Category":"ABCD",
+				"Description":"Display Rule to conditionally SHow/Hide Fields/Sections",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"AB4CD:Wizard,c:Wizard,AB4CD:Grid,c:grid,apex:page,apex:form",
+				"DisplayTemplate":"ABCDSmartRuleTemplate",
+				"LifeCount":"*",
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"Runtime","Label":"Runtime","Mandatory":false, "Value":"{!Runtime}","Readonly":true},
+					{"Type":"Text","Name":"Name","Label":"Rule Name","Mandatory":true},
+					{"Type":"Radio","Name":"Event","Label":"Trigger Event", "Value":"Change", "options":[{"Label":"Change", "Value":"change"},{"Label":"Click", "Value":"click"}]},
+					{"Type":"Text","Name":"FieldId","Label":"Field Id","Mandatory":true},
+					{"Type":"TextArea","Name":"Targets","Label":"Targets","Mandatory":false},
+					{"Type":"TextArea","Name":"MatchValues","Label":"Matching Values","Value":"ALL"},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			},
+			{ 
+				"Id":"One",
+				"Name":"SmartRule",
+				"Label":"Display Rule",
+				"Type":"Visualforce",
+				"NameSpace":"c",
+				"Category":"ABCD",
+				"Description":"Display Rule to conditionally SHow/Hide Fields/Sections",
+				"Icon":"/auradesign/icons/flexipage/visualforcePage.svg",
+				"Draggable":true,
+				"Container":false,
+				"Droppables":"AB4CD:Wizard,c:Wizard,AB4CD:Grid,c:grid,apex:page,apex:form",
+				"DisplayTemplate":"ABCDSmartRuleTemplate",
+				"LifeCount":"*",
+				"hidden":true,
+				"Attributes":
+				[
+					{"Type":"Text","Name":"Id","Label":"Id"},
+					{"Type":"Text","Name":"Runtime","Label":"Runtime","Mandatory":false, "Value":"{!Runtime}","Readonly":true},
+					{"Type":"Text","Name":"Name","Label":"Rule Name","Mandatory":true},
+					{"Type":"Radio","Name":"Event","Label":"Trigger Event", "Value":"Change", "options":[{"Label":"Change", "Value":"change"},{"Label":"Click", "Value":"click"}]},
+					{"Type":"Text","Name":"FieldId","Label":"Field Id","Mandatory":true},
+					{"Type":"TextArea","Name":"Targets","Label":"Targets","Mandatory":false},
+					{"Type":"TextArea","Name":"MatchValues","Label":"Matching Values","Value":"ALL"},
+					{"Type":"TextArea","Name":"rendered","Label":"Rendered","Mandatory":false}
+				]
+			}
+		]
+}

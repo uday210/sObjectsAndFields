@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        
+        <members>selectSobjectcmp</members>
+		<members>sObjectFieldsDisplay</members>
+		<members>sObjectDisplay</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+	  <types>
+        
+        <members>SobjectAndFieldsPuller</members>
+        <name>ApexClass</name>
+    </types>
+	
+       <version>40.0</version>
+</Package>

@@ -1,0 +1,17 @@
+<apex:page cache="false" showHeader="false" sidebar="false" standardStylesheets="false">
+    <style>
+        body {
+        	margin: 0;
+        }
+        html, body {
+        	background: #f7f7f9;
+        }
+        #setup {
+	        height: 100vh;
+        }
+    </style>
+    <apex:iframe src="{!'https://quip.com/salesforce/package-setup?org_id=' + $Organization.Id}" 
+        scrolling="no"
+        id="setup"
+        frameborder="0"/>
+</apex:page>

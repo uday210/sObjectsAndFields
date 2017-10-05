@@ -1,0 +1,658 @@
+<apex:page standardController="SDL_LC__Live_Agent_Settings__c" extensions="SDL_LC.LiveAgentSettingsController"  docType="html-5.0" sidebar="false" >
+    <html lang="en" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
+        <head>
+            <title>SDL Project Form</title>
+            <meta charset="utf-8"/>
+            <meta content="ie=edge" http-equiv="x-ua-compatible"/>
+            <meta content="width=device-width, initial-scale=1" name="viewport"/>
+            <meta content="Design System" name="apple-mobile-web-app-title"/>
+            <meta content="Design System" name="application-name"/>
+            <meta content="#ffffff" name="msapplication-TileColor"/>
+            <meta content="#ffffff" name="theme-color"/>
+            
+            <apex:stylesheet value="{!URLFOR($Resource.SDL_LC__LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/styles/salesforce-lightning-design-system-vf.css')}" />
+            <apex:includeScript value="{!URLFOR($Resource.SDL_LC__liveAgent_static_Resources, '/liveagentStaticResources/jquery-1.12.0.js')}" />
+            <apex:includeScript value="{!URLFOR($Resource.SDL_LC__liveAgent_static_Resources, '/liveagentStaticResources/securefiltersmaster/lib/secure-filters.js')}" />
+        </head>
+        
+        <style>
+            .panel-heading {
+                color: #fff;
+                background-color: #467cbf;
+                border-color: #467cbf;
+                padding: 18px 15px;
+                border-bottom: 1px solid transparent;
+                border-top-right-radius: 3px;
+                border-top-left-radius: 3px;
+            }
+            
+            .bPageBlock {  
+                background-color : transparent !important; 
+                margin-left:10px !important;
+                margin-right:10px !important;
+                margin-bottom:10px !important;
+                position:relative !important;
+                margin-top:25px !important;
+                min-height:100px !important;  
+                  
+                border-top:solid 3.8px #088A08 !important;
+               
+            } 
+            
+            
+            div#LiveSpinner:before {
+                  content: '';
+                  display: block;
+                  position: fixed;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  background-color: rgba(0,0,0,0.1);
+                  z-index:998 !important;
+                  
+            }
+            #LiveSpinner{
+                position:  fixed;
+                top: 45%;
+                left: 45%;
+                z-index:998 !important;
+            }
+            
+            
+            .errorCls{
+                z-index : 1000;
+                position : fixed;
+                //background:white;
+            
+            } 
+        </style>
+        <apex:messages ></apex:messages>
+        <body>
+          <apex:form >
+            
+            
+            <form styleClass="form-horizontal" id="livesetting">
+            <div id="slds" style="margin-top: 40px;" > 
+              <!-- Main -->
+                <main role="main" class="site-main" style=" margin-left:auto; !important">
+                    <div class="site-content slds slds-p-around--xx-large slds slds-grid slds slds-wrap" >
+                         <div class="container" style="margin-left:6%;width:65%;">
+                            <div class="slds slds-container--medium" style="margin-left: auto;margin-right: auto;!important;">
+                                
+                                <div class="panel-body">   
+                                  <div class="slds slds-tabs--default" id="containerDivId" style="margin-top:0px;width:135%">                 
+                                    <div class="panel panel-default" style="color:#808080;top:20px;visibility:visible;border-top:solid 3.8px #088A08 !important;border: 1px solid #d8dde6;border-radius: 0.5%">
+                                           <!--Header-->
+                                           <div class="slds slds-page-header slds-text-align--center" role="banner" style="height:88px">
+                                              <div >
+                                                 
+                                                <b style="float:left;margin-left:20%;"><h1 class="slds slds-text-heading--large slds-truncate" title="Live Agent Chat Settings">SDL Instant Translation for Live Agent - Settings</h1></b>
+                                               </div>
+                                           </div>
+                                           <br />
+                                           <div >
+                                               <img src="{!URLFOR($Resource.liveAgent_static_Resources, '/liveagentStaticResources/SDL_Logo.png')}" style="height:69px;float: left;margin-top: -1%;margin-left: 0%;width:32%;"></img>
+                                           </div>
+                                           <br /><br /><br /><br />
+                                         
+                                          <!--API Key-->
+                                          
+                                          <label class="slds slds-form-element__label" for="api-integration-key" style="margin-left:20px;"> API Integration Key</label>                                          
+                                          <input class="slds slds-input" id="api-integration-key" maxlength="255" name="api-integration-key" size="20" style="margin-left:10.88%;width:34%;" type="text"></input>
+                                         
+                                          <br /><br />
+                                          <!--User Language-->
+                                          <label class="slds slds-form-element__label" for="api-integration-key" style="margin-left:20px;">Target Language </label>
+                                          <apex:inputHidden value="{!userlang}" id="myHiddenVar" />
+                                          <input class="slds slds-input" id="target-language" maxlength="255" name="target-language" size="20" style="margin-left:12.1%;width:34%;" type="text" value="{!userlang}" onblur="document.getElementById('{!$Component.myHiddenVar}').value = this.value;" readonly="readonly"></input>
+                                          <br /><br />
+                                          <!-- Language detection-->
+                                          <label class="slds slds-form-element__label" for="language-detection" style="margin-left:20px;"> Language detection</label>
+                                          <!--<input class="slds slds-input" id="language-detection" maxlength="255" name="language-detection" size="20" style="margin-left:10.4%;width:34%;" type="text" ></input>-->
+                                          <select class="slds slds-select" id="language-detection" name="language-detection" size="1" style="width:34%;height:25px !important;font-size:15px;margin-top:-38%;margin-left:10.4%;">
+                                            <option value="100" selected="selected">100</option>
+                                            <option value="Send All Characters" >Send All Characters</option>
+                                            </select>
+                                          <br /><br />
+                                          
+                                           <div id="LiveSpinner" style="display:none;">
+                                                    <apex:image url="{!URLFOR($Resource.SDL_LC__liveAgent_static_Resources, '/liveagentStaticResources/slds_spinner_brand.gif')}" width="100" height="100"/>
+                                           </div>
+                                          
+                                          <!--Checkbox-->
+                                          <div class="slds slds-form-element" >
+                                            <label class="slds slds-form-element__label slds-checkbox" for="translation" style="margin-left:20px;">Turn on Translation for service console
+                                             <input style="display:none;" name="checkbox" type="checkbox" id="translation"   />                                                                                            
+                                              <span  class="slds slds-checkbox--faux" style="position:relative;left:15%"></span>
+                                            </label> 
+                                          </div>
+                                          <br />
+                                          <!--Footer-->
+                                          <div class="slds slds-panel-footer" > 
+                                            <center><div id="error-content-msg" style="color:red"></div><br/><input type="button" id="basicsetbtn" class="slds slds-button slds slds-button--brand" value="Save Basic Settings" style="width=40%" onclick="BasicSetting();" /></center>           
+                                          </div> 
+                                            
+                                           <!--Alert Box-->
+                                           <div role="dialog" id="error-modal" tabindex="-1" aria-labelledby="header43" class="slds slds-modal errorCls" >
+                                              <div class="slds slds-modal__container" style="width:15%">
+                                                
+                                                <div class="slds slds-modal__content slds-p-around--large"  >
+                                                  <center><h2><p id="AlertContent">Please Enter API KEY.</p></h2></center>
+                                                </div>
+                                                <div class="slds slds-modal__footer">
+                                                  <center><input type="button" class="slds slds-button slds-button--brand" value="OK" onclick="removeAlert();" /></center>
+                                                </div>
+                                              </div>
+                                            </div>
+                                           <div class="slds slds-backdrop" id="backdrop"></div>
+                                          
+                                          
+                                          <br />
+                                          
+                                          
+                                          <!--2nd Panel-->
+                                          <div class="slds" >
+                                            <div class="apexp">
+                                              <div  class="bPageBlock brandSecondaryBrd apexDefaultPageBlock secondaryPalette">
+                                                <div class="pbBody">
+                                                  <!--LANGUAGE PAIRS-->
+                                                   <label class="slds slds-form-element__label" for="max-usage" style="margin-left:20px;">LANGUAGE PAIRS</label>
+                                                   <input class="slds slds-input" id="search" type="search" maxlength="255" name="max-usage" size="20"  style="margin-left:119px;width:34%;margin-top:9px"  placeholder="Please enter a language to search..."  autocomplete="off"></input>
+                                                   
+                                                  <button class="slds slds-button slds-button--icon-border" onclick="getAllLanguagePairs();return false;" aria-live="assertive" style="width:26px;height:26px">
+                                                      <svg class="slds slds-button__icon" aria-hidden="true" style="margin-left:-6.5px;margin-top:-14px;margin-right:-4px;height:16px;color: #626b80;">
+                                                        <use xlink:href="{!URLFOR($Resource.LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/icons/utility-sprite/svg/symbols.svg#rotate')}"></use>
+                                                      </svg>
+                                                      <span class="slds slds-assistive-text">Like</span>
+                                                  </button>
+                                                  <br /><br />                                               
+                                                  <!--Table-->
+                                                 <div  style="height:215px;overflow-y:auto;line-height:35px;position:relative;">                     
+                                                    <table class="slds-table" id="langPairs" style="height:60%;" role="grid">
+                                                    <thead>
+                                                       <tr class="slds slds-section__title">
+                                                       <th class="slds-cell-shrink"><label class="slds-checkbox"><input type="checkbox" id="selectall" onchange="checkAll(this)"  /><span class="slds-checkbox--faux"></span><span class="slds-assistive-text">Select All</span></label></th>
+                                                       <th Style="width:300px;"><b>From</b></th>                                                       
+                                                       <th Style="width:300px;"><b>To</b></th>
+                                                       <th Style="width:300px;"><b>Domain</b></th>
+                                                       </tr>
+                                                    </thead>
+                                                    </table>  
+                                                  </div> 
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <br />
+                                          <!--/2nd Panel-->
+                                          <!--Footer  -->
+                                           <div class="slds panel-footer" style="border-top:none;margin-top: -27px;">            
+                                              <center><div id="error-content-msg" style="color:red"></div><br/><input type="button"  class="slds slds-button slds slds-button--brand" value="Save Language Pairs" id="savelangpair" style="width=40%" onclick="SaveLanguagePairs();" /></center>           
+                                              
+                                            
+                                          </div>
+                                           
+                                          
+                                          <!-- DICTIONARY -->
+                                          <div class="bPageBlock brandSecondaryBrd apexDefaultPageBlock secondaryPalette" id="DictionarySection" Style="height:200px;" >                                              
+                                            <div style="position:relative;top:15px;left:10px;color:#808080;" >  
+                                              <label class="slds slds-form-element__label" for="max-usage" style="margin-left:20px;">DICTIONARY</label>
+                                              
+                                              <button class="slds slds-button slds-button--icon-border" onclick="getAllDictionary();return false;" aria-live="assertive" style="height:26px;width:26px;">
+                                                  <svg class="slds slds-button__icon" aria-hidden="true" style="margin-left:-6.55px;margin-top:-13px;margin-right:-4px;height:16px;color: #626b80;">
+                                                    <use xlink:href="{!URLFOR($Resource.LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/icons/utility-sprite/svg/symbols.svg#rotate')}"></use>
+                                                  </svg>
+                                                  <span class="slds slds-assistive-text">Like</span>
+                                              </button>                                             
+                                              <br /><br />
+                                              <select class="slds slds-select" id="Dictionary-detection" name="Dictionary-detection" style="width:34%;font-size:15px;margin-top:-38%;min-height:25%;" >
+                                                 
+                                              </select>
+                                              
+                                              
+                                            </div>
+                                          </div>
+                                          <br />  
+                                          <!--Dictionary panel ends -->
+                                          <!--Footer-->
+                                          <div class="slds panel-footer" style="border-top:none;margin-top: -27px;">
+                                              <center><div id="error-content-msg" style="color:red"></div><br/><input type="button" class="slds slds-button slds slds-button--brand" id="savedic" value="Save Dictionary" style="width=40%" onclick="SaveDictionary();" /></center>                       
+                                          
+                                          </div>
+                                          <br />
+                                          
+                                           
+                                         </div>
+                                     </div>
+                               </div>
+                               <!--/Panel-Body-->                                
+                           </div>
+                         </div>
+                    </div>
+               </main>
+              </div>
+         </form>
+          </apex:form>  
+        </body>
+    </html>
+    
+    <script>
+       
+        var selecteddic;
+        var noofrows;
+        var count=0;
+        var html_encode = secureFilters.html;
+          
+        $('#translation').change(function(){
+             if($(this).prop('checked')){
+                  $(this).val('TRUE');
+             }else{
+                  $(this).val('FALSE');
+             }
+        });
+        
+    
+        
+      
+        $( document ).ready(function() {
+      
+            $('#LiveSpinner').show();
+            getBasicSetting();
+            
+        });
+    
+         function  getBasicSetting(){
+               
+               Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.LiveAgentSettingsController.GetBasicSettings}',                    
+                    function(result, event){
+                      if(result != null){
+                         $("#api-integration-key").val(result.SDL_LC__APIKey__c);
+                         $("#target-language").value =result.SDL_LC__TargetUserLanguage__c;
+                         $("#language-detection").value=result.SDL_LC__DetectionLimit__c;
+                         $("#translation").prop("checked", result.SDL_LC__isActive__c);
+                         $('#LiveSpinner:before').hide();
+                         
+                         refreshLanguagePairs();
+                        reloadDictionaries();
+                         
+                       }  
+                        else{
+                         
+                         $("#translation").prop("checked", true);
+                          
+                            $("#api-integration-key").val(''); 
+                                                     
+                           }
+                       $('#LiveSpinner').hide();  
+                         
+                    }
+                );
+                
+                
+         }
+         
+         function removeAlert()
+         {
+             $("#error-modal").removeClass("slds-fade-in-open");
+             $("#backdrop").removeClass("slds-backdrop--open");
+
+
+         }
+    
+         function BasicSetting(){
+             var keyval=$("#api-integration-key").val().trim(); 
+             
+             if (keyval.length==0)
+              { 
+                document.getElementById("AlertContent").innerHTML = html_encode("Please Enter API KEY");
+                $("#error-modal").addClass("slds-fade-in-open");
+                $("#backdrop").addClass(" slds-backdrop--open");
+              
+              }
+              else
+              {
+                 
+                  var apikey= $("#api-integration-key").val();
+                  var targetlanguage=$("#target-language").val();
+                  var detectionlimit=$("#language-detection").val();
+                  var translation=$("#translation").val();
+                
+                  if($("#translation").val() == 'TRUE' || $("#translation").val() == 'true'|| document.getElementById('translation').checked){
+                      var translation= true;
+                   }
+                  else
+                  {
+                   var translation= false;
+                   }
+                 
+                  Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.LiveAgentSettingsController.UpdateLiveSetting}',
+                    apikey,targetlanguage,detectionlimit,translation, 
+                    function(result, event){
+                        
+                        document.getElementById("AlertContent").innerHTML = html_encode("Basic Settings Updated");
+                        $("#error-modal").addClass("slds-fade-in-open");
+                        $("#backdrop").addClass(" slds-backdrop--open");
+                        
+                    }
+                ); 
+                 
+                 
+              }
+         }
+     
+         $( "#search" ).keyup(function() {
+               searchTable($(this).val());
+        });
+     
+         function searchTable(inputVal)
+         {
+            var table= $('#langPairs');
+            table.find('tr').each(function(index, row)
+            {
+                var allCells = $(row).find("td");
+                if(allCells.length > 0)
+                {
+                    var found = false;
+                    allCells.each(function(index, td)
+                    {
+                        var regExp = new RegExp(inputVal,'i');
+                        if(regExp.test($(td).text()))
+                        {
+                            found = true;
+                            return false;
+                        }
+                    });
+                    if(found == true)$(row).show();else $(row).hide();
+                }
+            });
+         }
+     
+         function getAllLanguagePairs(){
+               
+                $('#LiveSpinner').show();
+                 Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.LiveAgentSettingsController.getSDLLanguagePairs}',
+                function(result,event){
+                
+                  if(result.isError== undefined || result.isError == null || result.isError == true){
+                              $('#LiveSpinner').hide()
+                                        document.getElementById("AlertContent").innerHTML = html_encode(result.errorMessage);
+                                        $("#error-modal").addClass("slds-fade-in-open");
+                                        $("#backdrop").addClass(" slds-backdrop--open");
+                                        $('#selectall').prop('checked', false); // Unchecks it
+                  }
+                  else{
+                  
+                           if(result.APILanguagePairs.length>0){
+                                   noofrows=result.APILanguagePairs.length;
+                                   
+                                       $("#langPairs > tbody").html("");   
+                                       refreshLanguagePairs();
+                                      $('#LiveSpinner').hide()
+                                        document.getElementById("AlertContent").innerHTML = html_encode("Language Pairs Are Fetched.");
+                                        $("#error-modal").addClass("slds-fade-in-open");
+                                        $("#backdrop").addClass(" slds-backdrop--open");
+                                        $('#selectall').prop('checked', false); // Unchecks it
+                           }
+                           else{    
+                                   var tbody = $("#langPairstableBody"); 
+                                    
+                                   if(tbody.children().length == 0){
+                                       // $('#langPairstableBody').html('');
+                                        $("#langPairs > tbody").html(""); 
+                                         refreshLanguagePairs();
+                                        $('#LiveSpinner').hide()
+                                        document.getElementById("AlertContent").innerHTML = html_encode("Language Pairs Are Fetched.");
+                                        $("#error-modal").addClass("slds-fade-in-open");
+                                        $("#backdrop").addClass(" slds-backdrop--open");
+                                        $('#selectall').prop('checked', false); // Unchecks it
+                                     }
+                                    else{
+                                        document.getElementById("AlertContent").innerHTML = html_encode("Language Pairs Are Fetched.");
+                                        $("#error-modal").addClass("slds-fade-in-open");
+                                        $("#backdrop").addClass(" slds-backdrop--open");
+                                        $('#LiveSpinner').hide()
+                                        $('#selectall').prop('checked', false); // Unchecks it
+                                    }
+                           }
+                                    
+                  }
+                 
+                },
+                 {escape: true}
+
+            ); 
+         
+         }
+     
+         function getAllDictionary(){
+                  $('#LiveSpinner').show();
+                 
+                  Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.LiveAgentSettingsController.getSDLDictionary}',
+                        function(result, event){
+                          if(result.isError== undefined || result.isError == null || result.isError == true){
+                                           $('#LiveSpinner').hide()
+                                           document.getElementById("AlertContent").innerHTML = html_encode(result.errorMessage);
+                                            $("#error-modal").addClass("slds-fade-in-open");
+                                            $("#backdrop").addClass(" slds-backdrop--open");
+                          }
+                          else{
+                              if(result.APIDictionaries.length>0){
+                                            $('#Dictionary-detection').html('');
+                                            reloadDictionaries();
+                                            $('#LiveSpinner').hide()
+                                            document.getElementById("AlertContent").innerHTML = html_encode("New Dictionaries Are Fetched.");
+                                            $("#error-modal").addClass("slds-fade-in-open");
+                                            $("#backdrop").addClass(" slds-backdrop--open");
+                              
+                              }
+                              else{
+                                           $('#Dictionary-detection').html('');
+                                           reloadDictionaries();
+                                           $('#LiveSpinner').hide()
+                                           document.getElementById("AlertContent").innerHTML = html_encode("Dictionaries Are Fetched.");
+                                           $("#error-modal").addClass("slds-fade-in-open");
+                                           $("#backdrop").addClass(" slds-backdrop--open");
+                              }
+                          
+                          }
+                                 
+                        },
+                         {escape: true}
+
+                    );  
+         
+         }
+     
+     function checkAll(ele) {
+              
+               // var tableRows = document.getElementById("langPairstableBody").rows;
+               var tablebody=$("#langPairstableBody");  
+              
+                        
+                                 if (ele.checked) {
+                                    $('#langPairstableBody').find('tr').each( function(x) {
+                                          var isChecked = $(this).css('display');
+                                          var checkBoxTD = $(this).children('td')[0];
+                                          var checkboxLabel = $(checkBoxTD).children();
+                                          if(isChecked  != 'none'){
+                                              $(checkboxLabel).children()[0].checked = true;
+                                          }
+                                         
+                                    });
+                                    
+                            }
+                            else{
+                                 
+                                 $('#langPairstableBody').find('tr').each( function(x) {
+                                          var isChecked = $(this).css('display');
+                                          var checkBoxTD = $(this).children('td')[0];
+                                          var checkboxLabel = $(checkBoxTD).children();
+                                          if(isChecked  != 'none'){
+                                              $(checkboxLabel).children()[0].checked = false;
+                                          }
+                                        
+                                    });
+                                   
+                              }
+             
+               
+           
+     }
+     
+         function refreshLanguagePairs(){
+               
+                var i=0;
+               Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.LiveAgentSettingsController.refreshCustomSDLLanguagePairs}',
+                function(result, event){
+                        if(result!=null){
+                                     noofrows=result.length;
+                                     count++;
+                                     var tablestring ='<tbody id="langPairstableBody">';
+                                     for(i=0;i<result.length;i++){
+                                         var domianDescription = '';
+                                         if(result[i].SDL_LC__DomainDescription__c != null && result[i].SDL_LC__DomainDescription__c != undefined)
+                                         domianDescription = result[i].SDL_LC__DomainDescription__c;
+                                         if(result[i].SDL_LC__Status__c == true){
+                                             tablestring+='<tr id="'+ html_encode(result[i].Id)+'" class="slds slds-text-body--regular"><td class="slds-cell-shrink" data-label="Select Row"><label class="slds-checkbox"><input type="checkbox" name="langstatus" id="langstatus" checked="'+ html_encode(result[i].SDL_LC__Status__c)+'" /><span class="slds-checkbox--faux"></span><span class="slds-assistive-text">Select Row</span></label></td><td Style="width:300px;">'+ html_encode(result[i].SDL_LC__FromLanguage__c)+'</td><td Style="width:300px;">'+ html_encode(result[i].SDL_LC__ToLanguage__c)+'</td><td>'+ html_encode(domianDescription)+'</td></tr>';
+                                           }
+                                         else{
+                                             tablestring+='<tr id="'+ html_encode(result[i].Id)+'" class="slds slds-text-body--regular"><td class="slds-cell-shrink" data-label="Select Row"><label class="slds-checkbox"><input type="checkbox" name="langstatus" id="langstatus" /><span class="slds-checkbox--faux"></span><span class="slds-assistive-text">Select Row</span></label></td><td Style="width:300px;">'+ html_encode(result[i].SDL_LC__FromLanguage__c)+'</td><td Style="width:300px;">'+ html_encode(result[i].SDL_LC__ToLanguage__c)+'</td><td>'+ html_encode(domianDescription)+'</td></tr>';
+                                             }
+                                      }
+                                     tablestring += '</tbody>';
+                                    $('#langPairs').append(tablestring);
+                                    $('#LiveSpinner:before').hide();
+                          }
+                }
+            );
+            
+            }
+        
+      function SaveLanguagePairs(){
+            
+             $('#LiveSpinner').show();
+              var tableRows;
+             var tbody = $("#langPairstableBody");
+               
+             if(tbody.children().length == 0 && (count==1 || count==0)){
+               
+                    $('#LiveSpinner').hide();
+                    document.getElementById("AlertContent").innerHTML = html_encode("Language Pairs Are Not Available.");
+                    $("#error-modal").addClass("slds-fade-in-open");
+                    $("#backdrop").addClass(" slds-backdrop--open");
+            }
+            else{
+                tableRows = document.getElementById("langPairstableBody").rows;
+            }
+            
+              var  SdllanguagePairList=[];
+                for(i=0;i<tableRows.length;i++){
+                    var tableCells = tableRows[i].cells;
+                    var SdllanguagePair = {};
+                    SdllanguagePair.Id = tableRows[i].id;
+                    
+                     SdllanguagePair.Status__c = tableCells[0].children[0].children[0].checked;
+                    if(tableCells[1].innerHTML != null && tableCells[1].innerHTML != undefined){
+                        SdllanguagePair.FromLanguage__c = tableCells[1].innerHTML;
+                    }
+                    else{
+                        SdllanguagePair.FromLanguage__c = '';
+                    }
+                    if(tableCells[2].innerHTML != null && tableCells[2].innerHTML != undefined){
+                        SdllanguagePair.ToLanguage__c = tableCells[2].innerHTML;
+                    }
+                    else{
+                        SdllanguagePair.ToLanguage__c = '';
+                    }
+                    if(tableCells[3].innerHTML != null && tableCells[3].innerHTML != undefined){
+                        SdllanguagePair.DomainDescription__c = tableCells[3].innerHTML;
+                    }
+                    else{
+                        SdllanguagePair.DomainDescription__c = '';
+                    }
+                    SdllanguagePairList.push(SdllanguagePair);
+                }
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.LiveAgentSettingsController.SaveLanguagePairs}',
+                     SdllanguagePairList, 
+                     function(result, event){
+                        $('#LiveSpinner').hide();
+                       
+                        document.getElementById("AlertContent").innerHTML = html_encode("Language Pairs Updated");
+                        $("#error-modal").addClass("slds-fade-in-open");
+                        $("#backdrop").addClass(" slds-backdrop--open");
+                        
+                       $('#selectall').prop('checked', false); // Unchecks it
+                    }
+                );  
+                
+             
+                
+              
+      }       
+        
+          function reloadDictionaries(){
+                  
+                   Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.LiveAgentSettingsController.refreshCustomSDLDictionary}',
+                        function(result, event){
+                                var $select = $('#Dictionary-detection');
+                           
+                             for(i=0;i<result.length;i++){
+                                 var status = result[i].SDL_LC__Status__c;
+                                 
+                                 if(status == true){
+                                    $select.append($('<option value="' + html_encode(result[i].SDL_LC__Id__c) + '" selected="true">' + html_encode(result[i].SDL_LC__Name__c) + '</option>'));
+                                      }
+                                 else{
+                                    $select.append($('<option value="' + html_encode(result[i].SDL_LC__Id__c) + '">' + html_encode(result[i].SDL_LC__Name__c) + '</option>'));
+                                       }
+                             }
+                           
+                        }
+                    );
+                  
+               
+              
+            } 
+        
+        function SaveDictionary(){
+          
+                 $('#LiveSpinner').show();
+                 if( $('#Dictionary-detection').has('option').length > 0 ) {
+                     var option=$('select option:selected').text();
+                     var id=$("#Dictionary-detection").val();
+                     
+                      Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.LiveAgentSettingsController.SaveDictionary}',id,
+                        function(result, event){
+                                   $('#LiveSpinner').hide();
+                                   document.getElementById("AlertContent").innerHTML = html_encode("Dictionary Updated");
+                                    $("#error-modal").addClass("slds-fade-in-open");
+                                    $("#backdrop").addClass(" slds-backdrop--open"); 
+                                
+                                }
+                      ); 
+                     
+                    
+                 }
+                 else{
+                         $('#LiveSpinner').hide();
+                         document.getElementById("AlertContent").innerHTML = html_encode("Dictionaries Are Not Available.");
+                         $("#error-modal").addClass("slds-fade-in-open");    
+                         $("#backdrop").addClass(" slds-backdrop--open");
+                 }
+                 
+         
+        }
+        
+      
+     
+  </script>
+</apex:page>

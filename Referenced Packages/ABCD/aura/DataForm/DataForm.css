@@ -1,0 +1,15 @@
+.THIS .FAILURE{
+    padding:3px;
+    border-radius:3px;
+    background:#ef6e64;
+    color:#FFF;
+    margin:2px 8px;
+}
+
+.THIS .SUCCESS{
+    padding:3px;
+    border-radius:3px;
+    background:#1fcaa0;
+    color:#FFF;
+    margin:2px 8px;
+}

@@ -1,0 +1,543 @@
+<apex:page showHeader="false" sidebar="false" controller="SDL_LC.LiveAgentChatWidget_Controller" >
+<html lang="en" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="ie=edge" http-equiv="x-ua-compatible"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta content="Design System" name="apple-mobile-web-app-title"/>
+    <meta content="Design System" name="application-name"/>
+    <meta content="#ffffff" name="msapplication-TileColor"/>
+    <meta content="#ffffff" name="theme-color"/>
+                
+    <apex:includeScript value="{!URLFOR($Resource.SDL_LC__liveAgent_static_Resources, '/liveagentStaticResources/jquery-3.0.02.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.SDL_LC__liveAgent_static_Resources, '/liveagentStaticResources/securefiltersmaster/lib/secure-filters.js')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.SDL_LC__LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/styles/SalesforceLightningDesignSystem.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.SDL_LC__LightningDesignSystem, '/SalesforceLightningDesignSystem/assets/styles/SalesforceLightningDesignSystem.min.css')}" />
+    <apex:includeScript value="/support/console/38.0/integration.js"/>
+</head>
+
+
+
+<script>
+        
+        $( document ).ready(function() {
+         
+            getOrgSettings();
+            getLanguagePairs();
+            showOrHideOption();
+            
+            var winHeight = $( window ).height();
+            contentDivheight = winHeight*0.95;
+            $("#contentDiv").height(contentDivheight);
+            $("#chatLogDiv").height(contentDivheight*0.65);
+            var winWidth = $( window ).width();
+            $("#liveAgentChatInput").css('min-width',winWidth*0.85);
+            $("#fileDragArea").css('min-width','65%');
+            $(document).on('keypress', 'form input[type="text"]', function(e) {
+                  if(e.which == 13) {
+                    VisitorSendingMessage();
+                    e.preventDefault();
+                    return false;
+                  }
+            });
+            $( window ).resize(function() {
+                var winHeight = $( window ).height();
+                contentDivheight = winHeight*0.95;
+                $("#contentDiv").height(contentDivheight);
+                $("#chatLogDiv").height(contentDivheight*0.65);
+                var winWidth = $( window ).width();
+                $("#liveAgentChatInput").css('min-width',winWidth*0.85);
+                $("#fileDragArea").css('min-width','65%');
+            });
+            $("#liveAgentChatInput").attr("autocomplete","off");
+            $("#liveAgentChatInput").attr("placeholder","Write a message...");
+            $('#liveAgentChatLogText').on("DOMSubtreeModified",function(){
+                $(".client").children(".messageText").addClass("bubble");
+                $(".operator").children(".messageText").addClass("bubble");
+                $('#chatLogDiv').scrollTop($('#liveAgentChatLog')[0].scrollHeight);
+            });
+            window.setInterval(function(){
+              $('#chatLogDiv').scrollTop($('#liveAgentChatLog')[0].scrollHeight);
+            }, 5000);
+            
+   });
+        var orgSettings;
+        var langPairs = [];
+        var isEmailSent = true;
+        var visitorMessage;
+        var isTranslation = false;
+        var html_encode = secureFilters.html;
+        var targetLanguage;
+        var visitorSourceLanguage='eng';
+        var visitorlanguageid;
+        liveagent.chasitor.addCustomEventListener('AgentCustomEvent', customEventReceived);
+        function customEventReceived(result) {
+            var customData = result.getData();
+            targetLanguage = customData;
+            var e = document.getElementById("picklistarea");
+            e.style.display = 'block';
+        }
+        function getOrgSettings(){
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.LiveAgentChatWidget_Controller.getLiveAgentSettings}',
+                function(result, event){
+                    if (event.status) {
+                        if(result != null && result != undefined){
+                            orgSettings = result.liveAgentSettings;
+                            langPairs =  result.languagePairs;
+                            if(orgSettings != null)
+                            isTranslation = orgSettings.SDL_LC__isActive__c;
+                        }
+                    }
+                }, 
+                {escape: true}
+            );
+        }
+        function TranslateMessageAndSend(visitorMessage,visitorSourceLanguage,targetLanguage){
+            var lpairString = visitorSourceLanguage + ',' + targetLanguage;
+            if(langPairs != undefined && langPairs != null){
+                if(langPairs.includes(lpairString)){
+                    Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.LiveAgentChatWidget_Controller.TextTranslation}',encodeURIComponent(visitorMessage),visitorSourceLanguage,targetLanguage,
+                            function(result, event){
+                                if (event.status) {
+                                    if(result.isError == null || result.isError == undefined) {
+                                        var messageToSend = visitorMessage;
+                                        if(result.translation != undefined){
+                                          messageToSend = visitorMessage + ' : ' + result.translation;
+                                        }
+                                        document.getElementById("liveAgentChatInput").value = messageToSend;
+                                        SfdcApp.LiveAgent.Chasitor.sendMessage();
+                                   }
+                                   else{
+                                          document.getElementById("liveAgentChatInput").value = visitorMessage;
+                                          SfdcApp.LiveAgent.Chasitor.sendMessage();
+                                   } 
+                                }
+                            }, 
+                            {escape: false}
+                        );
+                }
+                else{
+                    document.getElementById("liveAgentChatInput").value = visitorMessage;
+                    SfdcApp.LiveAgent.Chasitor.sendMessage();
+                    if(isEmailSent != false)
+                    {
+                        sendEmailToAgent(visitorSourceLanguage,targetLanguage);
+                    }
+                }
+            }
+            else{
+                document.getElementById("liveAgentChatInput").value = visitorMessage;
+                SfdcApp.LiveAgent.Chasitor.sendMessage();
+            }
+            
+        }
+        function sendEmailToAgent(agentsrclang,TargetLanguage){
+            Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.LiveAgentChatWidget_Controller.SendEmailToAgent}',agentsrclang,TargetLanguage,
+                        function(result, event){
+                            if (event.status) {
+                                if(result == 'SUCCESS'){
+                                      isEmailSent = false;
+                                  } 
+                            }
+                        }, 
+                        {escape: true}
+                    );
+
+        }
+        
+    
+    function VisitorSendingMessage(){
+            visitorMessage = document.getElementById("liveAgentChatInput").value;
+                document.getElementById("liveAgentChatInput").value = '';
+                if(visitorMessage != null && visitorMessage != undefined && visitorMessage != ''){
+                   visitorMessage = visitorMessage.replace(/\n/g, ' ');
+                   if(isTranslation != undefined && isTranslation == true){
+                       if(visitorSourceLanguage == null || visitorSourceLanguage == undefined){
+                           var textToDetect = visitorMessage.substring(0,100);
+                           var visitorlang='eng'; //new
+                           
+                           document.getElementById("liveAgentChatInput").value = visitorMessage;
+                           SfdcApp.LiveAgent.Chasitor.sendMessage();
+                     
+                       }
+                       else{
+                           if(visitorSourceLanguage != targetLanguage){ // made a check such that source and target shouldn't be same
+                               TranslateMessageAndSend(visitorMessage,visitorSourceLanguage,targetLanguage);
+                           }
+                           else{
+                               document.getElementById("liveAgentChatInput").value = visitorMessage;
+                               SfdcApp.LiveAgent.Chasitor.sendMessage();
+                           }
+                       }
+                   }
+                   else{
+                       document.getElementById("liveAgentChatInput").value = visitorMessage;
+                       SfdcApp.LiveAgent.Chasitor.sendMessage();
+                   }
+                }
+        }
+        
+        function getLanguagePairs(){
+                            Visualforce.remoting.Manager.invokeAction(
+                                    '{!$RemoteAction.LiveAgentChatWidget_Controller.SDLLanguagePairs}',
+                                        function(result, event){
+                                          if(result!=null){
+                                                var $pickfrom = $('#listitems');
+                                                
+                                                  $.each( result, function( key, value ) {
+                                                        $pickfrom.append($('<li id="' + key + '"  class="slds-dropdown__item slds-has-icon--left"><a href="#" class="slds-truncate" id="' + key + '" role="menuitemradio"  onclick="setPicklistVal(this.innerHTML,this.id);">'+ value+ '</a></li>'));
+                                                  });
+                                                  
+                                             }
+                                        }
+                                  ); 
+                                  document.getElementById('spanId_Selected').innerHTML ='English';
+                                  showOrHideOption();
+                          }
+                      function showOrHideOption(){
+                            if(showOrHideOptionVal == 'show'){
+                               $("#downloadOptionsContainerId").show();
+                               showOrHideOptionVal = 'hide';
+                            }else if(showOrHideOptionVal == 'hide'){
+                               $("#downloadOptionsContainerId").hide();
+                               showOrHideOptionVal = 'show';
+                            }
+                        }
+                        showOrHideOptionVal = 'show';   
+                        $('#downloadOptionsContainerId').hide();
+                        
+                        $( "#spanId_Selected,#svgDownId").click(function() {
+                                showOrHideOption();
+                                return false;
+                         });
+                         
+                         function setPicklistVal(selectedTextval,selectedid){
+                              document.getElementById('spanId_Selected').innerHTML = selectedTextval;
+                               //langid=selectedid;
+                               visitorlanguageid=selectedid;
+                               visitorSourceLanguage=selectedid;//new
+                               liveagent.chasitor.sendCustomEvent('visitorSourceLanguage',visitorSourceLanguage);
+                               showOrHideOption();
+                         }
+        
+</script>
+<style>
+ body { overflow: hidden; width: 100%; height: 100%; padding: 0; margin: 0 }
+#waitingMessage { height: 100%; width: 100%; vertical-align: middle; text-align: center;
+display: none; }
+#liveAgentClientChat.liveAgentStateWaiting #waitingMessage { display: table; }
+#liveAgentSaveButton, #liveAgentEndButton { z-index: 2; }
+#buttonsDiv{
+    height: 30px;
+    background-color: #333;
+    }
+.liveAgentSaveButton,#liveAgentSaveButton {
+    background : #6D7391;
+    color: #fff;
+    display: inline-block;
+    float: left;
+    margin: 5px 10px 5px 10px;
+    border-radius: 3px;
+    font-size: 1em;
+    padding: 2px 8px;
+}
+.liveAgentSaveButton,#liveAgentSaveButton,#liveAgentEndButton,.liveAgentEndButton, .liveAgentCancelButton {
+    font-family: Arial;
+    line-height: normal;
+    text-align: center;
+    border-style: solid;
+    border-width: 0px;
+    cursor: pointer;
+}
+.liveAgentEndButton,#liveAgentEndButton {
+    float: right;
+    border-radius: 3px;
+    background: #C14251;
+    display: inline-block;
+    color: #fff;
+    margin: 5px 10px 5px 10px;
+    font-size: 1em;
+    padding: 2px 8px;
+}
+#liveAgentChatLogText .operator {
+    float: left;
+    padding: 8px 10px 0px 10px;
+}
+#liveAgentChatLogText .operator .bubble {
+    background-color: #DEEFF9;
+}
+#liveAgentChatLogText .client {
+    float: right;
+    text-align: right;
+    padding: 8px 10px 0px 10px;
+}
+#liveAgentChatLogText .operator, #liveAgentChatLogText .client, #liveAgentChatLogText .system {
+    margin-bottom: 10px;
+    clear: both;
+    position: relative;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#liveAgentChatLogText .client .bubble {
+    background-color: #FFFFFF;
+}
+#liveAgentChatLogText .bubble {
+    position: relative;
+    display: -moz-inline-stack;
+    display: inline-block;
+    margin: 0.2em 0em 0.4em 0em;
+    padding: 8px 10px 8px 10px;
+    border: 1px solid #E2E8ED;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    max-width: 90%;
+}
+.liveAgentAlert, .liveAgentMessage {
+    position: relative;
+    width: 245px;
+    margin: 0 auto;
+    padding: 1px 14px;
+    background: #f6f1bf;
+    line-height: 15px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0 1px 3px #323232;
+    -webkit-box-shadow: 0 1px 3px #323232;
+    box-shadow: 0px 1px 3px #323232;
+    display: none;
+    z-index: 1;
+}
+
+.liveAgentChatInput {
+height: 25px;
+border-width: 1px;
+ /* border-style: solid; */
+/* border-color: #000; */
+border : none;
+padding: 2px 0 2px 4px;
+background: #fff;
+width: 99%;
+outline:none;
+}
+#liveAgentChatLog {
+width: auto;
+height: auto;
+min-height: 280px;
+top: 0px;
+overflow-y: auto;
+left: 0;
+right: 0;
+bottom: 0;
+border: none;
+/* border-bottom: solid #D1D8E0 2px; */
+}
+.liveAgentState #chatTranscript, .liveAgentStateStatusMessage #chatTranscript, .liveAgentStateEnded #chatTranscript {
+    overflow-y: auto;
+    overflow-x: hidden;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+#liveAgentChatLogText .operator .bubble {
+    background-color: #DEEFF9;
+}
+#liveAgentChatLogText .bubble {
+    position: relative;
+    display: -moz-inline-stack;
+    display: inline-block;
+    margin: 0.2em 0em 0.4em 0em;
+    padding: 8px 10px 8px 10px;
+    border: 1px solid #E2E8ED;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    max-width: 90%;
+}
+.liveAgentSendButton {
+    background : #26AF3A !important;
+    display: inline-block;
+    padding: 0.3rem !important;
+    width: 50px;
+    font-size: 1em;
+    font-family: Arial;
+    border-radius: 3px;
+    border-width: 0px;
+    color: #fff;
+    margin: 5px 10px 5px 0px;
+    right: -67px;
+    top: 0px;
+}
+#liveAgentChatLogText p {
+    line-height: 1.3 !important;
+    font-weight: 200 !important;
+    font-size: 1em !important;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+.liveAgentState #chatLogDiv, .liveAgentStateEnded #chatLogDiv, .liveAgentStateStatusMessage #chatLogDiv{
+    bottom: 38px;
+    overflow: hidden;
+    word-wrap: break-word;
+    right: 0px;
+    left: 0px;
+    background-color: #F7F8F8 !important;
+    border-bottom: solid #D1D8E0 2px;
+    
+}
+#liveAgentChatLogText .operator, #liveAgentChatLogText .client, #liveAgentChatLogText .system {
+    margin-bottom: 10px;
+    clear: both;
+    position: relative;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.file_transfer_requested #liveAgentChatFileTransfer {
+     display: block;
+     background-color: #DDF1C9;
+     height: 45px;
+     margin-right: -67px;
+     margin-top: 0px;
+     z-index: 20;
+}
+.file_transfer_requested #liveAgentChatFileTransfer {
+     display: block;
+}
+.liveAgentFileDragArea {
+  left: 0;
+ right: -6px;
+ text-align: center;
+ line-height: 40px;
+ font-size: 14px;
+ text-align: center;
+ padding-top: 10px;
+}
+
+#fileTransferProgress {
+ top: 0;
+ left: 0;
+ bottom: 0;
+ pointer-events: none;
+ border: 1px solid #00A018;
+}
+.liveAgentFileCancelButton {
+ right: -60px;
+ margin-top: 10px;
+ z-index: 3;
+ background-image: url(../images/icon_close.png);
+ background-position: 0 0;
+ width: 50px;
+ height: 25px;
+ border: none;
+ color: #333;
+ cursor: pointer;
+ background-color: #6D7391;
+}
+.liveAgentFileSendButton {
+    background-color: #6D7391;
+    display: inline-block;
+    padding: 0.3rem !important;
+    border-radius: 3px;
+    background-image: url(../images/icon_close.png);
+    background-position: 0 0;
+    border-width: 0px;
+    color: #333;
+    right: -58px;
+    bottom: 13px;
+    font-family: Arial;
+    font-size: 1em;
+}
+#liveAgentChatFileTransfer {
+     display: none;
+}
+#liveAgentChatInput{
+width:auto;
+}
+#fileDragArea{
+    float: left;
+    width: auto;
+}
+</style>
+
+<body>
+
+<div id="liveAgentDiv">
+    <div id="logoDiv" style="background-color:white;">
+      <table>
+        <tr>
+          <td><div style="width:340px;height:60px;"><img id="theImage" src="{!JSENCODE(customerlogo)}" style="width:100%;height:100%;"/></div></td>
+          <td>
+             <div class="slds">
+               <div aria-expanded="true" class="slds slds-picklist" id="picklistarea" style="margin-top: 2%;display:none;">
+                   <button class="slds-button slds-button--neutral slds-picklist__label" aria-haspopup="true"  onclick="showOrHideOption(); return false;" style="width:112px;margin-left:-4%;margin-top:16%;max-width:120px;">
+                      <span class="slds-truncate" id="spanId_Selected"  name="liveagent.prechat:CaseLanguage">Select</span>
+                          <svg aria-hidden="true" class="slds-icon">
+                               <use xlink:href="{!URLFOR($Resource.LightningDesignSystem,'/SalesforceLightningDesignSystem/assets/icons/utility-sprite/svg/symbols.svg#down')}" id="svglanguagesDownId"></use>
+                          </svg>
+                   </button>
+                   <div class=" slds slds-dropdown slds-dropdown--left slds-dropdown--length-5" id="downloadOptionsContainerId" name="options" style="width:110%;min-width:120px;max-width:146px;margin-left:-10%;">
+                        <ul class="slds-dropdown__list" role="menu" id="listitems" style="margin-left:-38%;">
+                            
+                        </ul>
+                   </div>
+              </div>
+            </div>
+                                                                      
+          </td>
+        </tr>
+      </table>
+        
+        
+    </div>
+    <div id="contentDiv">
+        <liveAgent:clientChat >
+            <div id="buttonsDiv">
+                <liveAgent:clientChatSaveButton />
+                <liveAgent:clientChatEndButton />
+            </div>
+            <div id="messageDiv">
+                <table id="waitingMessage" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td>Please wait while you are connected to an available agent.</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="alertDiv">
+                <liveAgent:clientChatAlertMessage />
+                <liveAgent:clientChatStatusMessage />
+            </div>
+            <div id="chatLogDiv" style="overflow-y:auto;width:100%">
+                <liveAgent:clientChatLog />
+            </div>
+            <div id="inputDiv">
+                <div id="standardTextDiv" style="float:left">
+                    <liveagent:clientChatInput useMultiline="false"/>
+                </div>    
+                    <button type="button" class="liveAgentChatElement liveAgentSendButton" onclick="VisitorSendingMessage(); return false;">Send</button>
+            </div>
+            <div id="fileTransferDiv">
+                <liveAgent:clientChatFileTransfer />
+            </div>               
+        </liveAgent:clientChat>
+        <div style="float:left;font-style:italic;margin-left:1%;margin-top:2%;font-size:14px">
+             <p>powered by SDL Instant Translation</p>
+       </div> 
+   </div>   
+</div>
+</body>
+</html>
+</apex:page>

@@ -1,0 +1,18 @@
+<aura:component description="Quip Component for Salesforce" controller="Quip.Quip_LightingComponent_Controller" implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:appHostable,force:hasRecordId,force:hasSObjectName,forceCommunity:layout" access="global" >
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="sObjectName" type="String"/>
+    <aura:attribute name="orgId" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <aura:if isTrue="{!v.orgId}">
+        <div><iframe src="{!'https://quip.com/salesforce/component?record_id=' + v.recordId + '&amp;record_type=' + v.sObjectName + '&amp;org_id=' + v.orgId}"
+                title="Quip Documents"
+                scrolling="no" 
+                frameborder="0"
+                allowtransparency="no" 
+                allowfullscreen="true"/>
+        </div>
+        <aura:set attribute="else">
+            <div><lightning:spinner variant="brand" size="medium"/></div>
+        </aura:set>
+    </aura:if>
+</aura:component>

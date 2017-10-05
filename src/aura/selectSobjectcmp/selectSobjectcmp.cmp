@@ -1,0 +1,13 @@
+<aura:component controller="SobjectAndFieldsPuller" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+ 
+    <aura:handler name="init" value="this" action="{!c.doInit}"/>
+    
+    <div class="slds-panel slds-grid slds-grid_vertical slds-nowrap">
+   		 <div class="slds-form slds-form_stacked slds-grow slds-scrollable_y">
+     		 <div class="slds-panel__section slds-border_bottom">
+   				 <ui:inputSelect label="Select sObject: " class="dynamic" aura:id="InputSelectDynamic" />
+    			 <ui:button label="Go" press="{!c.onChange}"/>
+    		 </div>
+         </div>
+     </div>
+</aura:component>

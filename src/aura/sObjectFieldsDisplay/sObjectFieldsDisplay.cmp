@@ -1,0 +1,31 @@
+<aura:component controller="SobjectAndFieldsPuller" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	
+    <aura:handler event="c:SobjectSelectedEve" action="{!c.handleSobjectSelectedEvent}"/>
+    <aura:attribute name="buttonStatus" type="boolean" default="true"/>
+    <aura:attribute name="sobj_is" type="String" default=""/>
+     <aura:attribute name="Fields" type="List" />
+     <aura:attribute name="selectedFields" type="String" default="Account Name" />
+    <aura:attribute name="showDownload" type="Boolean" default="false"/>
+    <aura:if isTrue="{!!buttonStatus}">
+        <div class="slds-grid">
+       <table  class="slds-table slds-table_bordered slds-table_cell-buffer"> 
+         <tr>
+             <td><b>S.No</b></td>
+             <td><b>Field Label</b></td>
+             <td><b>Api Name</b></td>
+         
+           </tr>  
+    <aura:iteration items="{!v.Fields}" var="cus" indexVar="key">
+        <tr>
+        	<td>{!key}</td>
+            <td>{!cus.value.Name}</td>
+            <td>{!cus.value.APIName}</td>
+        </tr>
+       
+        </aura:iteration>
+           
+          </table> 
+            </div>  
+     </aura:if>
+      
+</aura:component>
